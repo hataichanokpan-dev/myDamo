@@ -1,0 +1,11 @@
+node_modules
+dist
+.netlify
+*.local
+.DS_Store
+.omc
+.claude
+tsconfig.tsbuildinfo
+yf_page.html
+yahoo-finance-scraper.js
+parse-yf.cjs

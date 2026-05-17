@@ -1,0 +1,162 @@
+.calc-page { padding: var(--space-xxl) 0 var(--space-section); }
+.calc-page h1 { margin-bottom: var(--space-xs); }
+.page-desc { color: var(--color-ink-muted-48); font-size: 15px; margin-bottom: var(--space-xl); }
+
+.calc-grid { display: grid; grid-template-columns: 380px 1fr; gap: var(--space-xl); align-items: start; }
+
+.calc-inputs { }
+.calc-inputs h2 { font-size: 17px; font-weight: 600; margin-top: var(--space-lg); margin-bottom: var(--space-sm); border-bottom: 1px solid var(--color-divider-soft); padding-bottom: var(--space-xs); }
+.calc-inputs h2:first-of-type { margin-top: 0; }
+
+.input-section { display: flex; flex-direction: column; gap: var(--space-sm); }
+.input-section label { font-size: 13px; color: var(--color-ink-muted-80); font-weight: 500; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.input-section input { width: 100%; height: 36px; font-size: 14px; padding: 0 10px; }
+.input-section input[type="checkbox"] { width: auto; height: auto; }
+
+.auto-tag {
+  display: inline-block; font-size: 10px; font-weight: 600;
+  background: var(--color-auto-fill); color: var(--color-primary);
+  padding: 1px 5px; border-radius: 3px; letter-spacing: 0.03em;
+}
+
+.calc-btn { width: 100%; margin-top: var(--space-lg); padding: 14px; font-size: 18px; font-weight: 300; }
+
+/* ── Results Section ── */
+
+.calc-results {
+  background: var(--color-canvas-parchment);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  min-width: 0;
+  overflow: hidden;
+}
+.calc-results h2 { font-size: 21px; font-weight: 600; letter-spacing: 0.231px; margin-bottom: var(--space-md); }
+.calc-results h3 { font-size: 17px; font-weight: 600; margin-top: var(--space-lg); margin-bottom: var(--space-sm); }
+
+.result-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-sm);
+}
+.result-card {
+  background: var(--color-canvas); border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md); padding: var(--space-md);
+  display: flex; flex-direction: column; gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+}
+.result-card-main {
+  grid-column: 1 / -1;
+  background: var(--color-surface-tile-1); color: var(--color-body-on-dark);
+  flex-direction: row; align-items: baseline; justify-content: space-between;
+}
+.result-card-main .result-label { color: var(--color-body-muted); }
+.result-label { font-size: 12px; color: var(--color-ink-muted-48); }
+.result-value { font-size: 48px; font-weight: 600; letter-spacing: -0.28px; }
+.result-number { font-size: 21px; font-weight: 600; }
+.result-compare { font-size: 14px; color: var(--color-body-muted); }
+
+.diagnostics { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-xs); }
+.diag-item {
+  display: flex; justify-content: space-between;
+  background: var(--color-canvas); border-radius: var(--radius-sm);
+  padding: 8px 12px; font-size: 14px;
+  min-width: 0;
+}
+.diag-item span:first-child { color: var(--color-ink-muted-48); white-space: nowrap; }
+.diag-item span:last-child { font-weight: 600; white-space: nowrap; }
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+.table-scroll table { min-width: 900px; font-size: 13px; }
+.row-label { font-weight: 600; white-space: nowrap; color: var(--color-ink-muted-80); }
+
+.roc-insight-box {
+  margin-top: 24px; padding: 16px;
+  background: var(--color-canvas); border-radius: var(--radius-md);
+  font-size: 14px; color: var(--color-ink-muted-80); line-height: 1.5;
+}
+
+/* ── ModelSelector recommendation ── */
+
+.calc-results--recommend {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+}
+.recommend-title { color: var(--color-primary); }
+.recommend-reason {
+  font-size: 15px; line-height: 1.6;
+  color: var(--color-ink-muted-80); margin: var(--space-md) 0;
+}
+.recommend-tools {
+  margin-top: var(--space-lg); padding: var(--space-md);
+  background: var(--color-canvas-parchment); border-radius: var(--radius-md);
+  font-size: 13px;
+}
+.recommend-links {
+  display: flex; flex-direction: column; gap: 4px; margin-top: var(--space-xs);
+}
+.calc-results--recommend .btn-secondary { margin-top: var(--space-md); width: 100%; }
+
+/* ── Tablet ── */
+
+@media (max-width: 834px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .result-summary { grid-template-columns: 1fr 1fr; }
+  .result-value { font-size: 36px; }
+}
+
+/* ── Phone ── */
+
+@media (max-width: 640px) {
+  .calc-page { padding: var(--space-md) 0 var(--space-xxl); }
+  .calc-page h1 { font-size: 22px; }
+  .page-desc { font-size: 14px; margin-bottom: var(--space-md); }
+  .calc-grid { grid-template-columns: 1fr; gap: var(--space-md); }
+  .input-section { gap: var(--space-xs); }
+  .input-section label { font-size: 14px; padding: 4px 0; }
+  .input-section input { height: 44px; font-size: 16px; }
+
+  .calc-btn { padding: 16px; font-size: 17px; }
+  .calc-inputs h2 { font-size: 15px; }
+
+  /* Results: mobile-first redesign */
+  .calc-results {
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-xs);
+  }
+  .calc-results h2 { font-size: 18px; margin-bottom: var(--space-sm); }
+  .calc-results h3 { font-size: 14px; margin-top: var(--space-md); margin-bottom: var(--space-xs); }
+
+  /* Main result card: centered hero */
+  .result-card-main {
+    flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-lg) var(--space-sm);
+    border-radius: var(--radius-md);
+    gap: 6px;
+  }
+  .result-card-main .result-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .result-value { font-size: 32px; }
+  .result-compare { font-size: 12px; color: var(--color-body-muted); word-break: break-word; }
+
+  /* Sub result cards: 2-column grid */
+  .result-summary { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .result-card { padding: var(--space-sm); border-radius: var(--radius-sm); gap: 2px; }
+  .result-card .result-label { font-size: 10px; line-height: 1.3; }
+  .result-number { font-size: 15px; }
+
+  /* Diagnostics: stacked list */
+  .diagnostics { grid-template-columns: 1fr 1fr; gap: 4px; }
+  .diag-item { font-size: 12px; padding: 6px 8px; border-radius: var(--radius-xs); }
+
+  /* Projection table: scroll within container */
+  .table-scroll { margin: 0; padding-bottom: var(--space-sm); }
+  .table-scroll table { font-size: 11px; min-width: 700px; }
+  .table-scroll th, .table-scroll td { padding: 5px 6px; }
+
+  .roc-insight-box { margin-top: var(--space-md); padding: var(--space-sm); font-size: 13px; border-radius: var(--radius-sm); }
+}

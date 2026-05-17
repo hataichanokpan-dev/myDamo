@@ -1,0 +1,15 @@
+.ticker-search { margin-bottom: var(--space-xl); }
+.ticker-input-row { display: flex; gap: var(--space-sm); max-width: 500px; }
+.ticker-input {
+  flex: 1; height: 44px; border-radius: var(--radius-pill);
+  padding: 0 20px; font-size: 17px;
+}
+.ticker-btn { white-space: nowrap; height: 44px; padding: 0 24px; font-size: 15px; }
+.ticker-error { color: var(--color-error); font-size: 14px; margin-top: var(--space-xs); }
+.ticker-hint { font-size: 12px; color: var(--color-ink-muted-48); margin-top: var(--space-xs); }
+
+@media (max-width: 640px) {
+  .ticker-input-row { flex-direction: column; max-width: 100%; }
+  .ticker-input { height: 48px; font-size: 16px; }
+  .ticker-btn { height: 48px; }
+}
