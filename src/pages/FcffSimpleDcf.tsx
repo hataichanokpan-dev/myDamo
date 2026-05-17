@@ -65,59 +65,60 @@ export default function FcffSimpleDcf() {
       <div className="container">
         <h1>FCFF Simple DCF Valuation</h1>
         <p className="page-desc">10-year Free Cash Flow to Firm model. Auto-fetch financials, set your assumptions, get intrinsic value per share.</p>
+        <p className="page-desc-thai">โมเดลกระแสเงินสดอิสระของบริษัท 10 ปี — ดึงข้อมูลการเงินอัตโนมัติ ตั้งสมมติฐาน คำนวณมูลค่าหุ้นที่แท้จริง</p>
 
         <TickerSearch onData={(data) => handleAutoFill(data)} />
 
         <div className="calc-grid">
           <div className="calc-inputs">
-            <h2>Financial Data</h2>
+            <h2>Financial Data <span className="thai-sub">ข้อมูลการเงิน</span></h2>
             <div className="input-section">
-              <FormField label="Revenue" source="auto" value={inputs.revenue} onChange={v => update('revenue', v)} />
-              <FormField label="Operating Income (EBIT)" source="auto" value={inputs.operatingIncome} onChange={v => update('operatingIncome', v)} />
-              <FormField label="Interest Expense" source="auto" value={inputs.interestExpense} onChange={v => update('interestExpense', v)} />
-              <FormField label="Book Value of Equity" source="auto" value={inputs.bookValueOfEquity} onChange={v => update('bookValueOfEquity', v)} />
-              <FormField label="Book Value of Debt" source="auto" value={inputs.bookValueOfDebt} onChange={v => update('bookValueOfDebt', v)} />
-              <FormField label="Cash & Securities" source="auto" value={inputs.cashAndMarketableSecurities} onChange={v => update('cashAndMarketableSecurities', v)} />
-              <FormField label="Shares Outstanding" source="auto" value={inputs.sharesOutstanding} onChange={v => update('sharesOutstanding', v)} />
-              <FormField label="Stock Price" source="auto" value={inputs.currentStockPrice} onChange={v => update('currentStockPrice', v)} step={0.01} />
-              <FormField label="Effective Tax Rate" source="default" value={inputs.effectiveTaxRate} onChange={v => update('effectiveTaxRate', v)} step={0.01} />
+              <FormField label="Revenue" hint="รายได้จากการขาย" source="auto" value={inputs.revenue} onChange={v => update('revenue', v)} />
+              <FormField label="Operating Income (EBIT)" hint="กำไรจากการดำเนินงานก่อนดอกเบี้ยและภาษี" source="auto" value={inputs.operatingIncome} onChange={v => update('operatingIncome', v)} />
+              <FormField label="Interest Expense" hint="ค่าใช้จ่ายดอกเบี้ย" source="auto" value={inputs.interestExpense} onChange={v => update('interestExpense', v)} />
+              <FormField label="Book Value of Equity" hint="มูลค่าตามบัญชีของส่วนของผู้ถือหุ้น" source="auto" value={inputs.bookValueOfEquity} onChange={v => update('bookValueOfEquity', v)} />
+              <FormField label="Book Value of Debt" hint="มูลค่าตามบัญชีของหนี้สิน" source="auto" value={inputs.bookValueOfDebt} onChange={v => update('bookValueOfDebt', v)} />
+              <FormField label="Cash & Securities" hint="เงินสดและหลักทรัพย์ที่ลงทุนได้" source="auto" value={inputs.cashAndMarketableSecurities} onChange={v => update('cashAndMarketableSecurities', v)} />
+              <FormField label="Shares Outstanding" hint="จำนวนหุ้นที่ออกและชำระแล้ว" source="auto" value={inputs.sharesOutstanding} onChange={v => update('sharesOutstanding', v)} />
+              <FormField label="Stock Price" hint="ราคาหุ้นปัจจุบัน" source="auto" value={inputs.currentStockPrice} onChange={v => update('currentStockPrice', v)} step={0.01} />
+              <FormField label="Effective Tax Rate" hint="อัตราภาษีเฉลี่ยที่จ่ายจริง" source="default" value={inputs.effectiveTaxRate} onChange={v => update('effectiveTaxRate', v)} step={0.01} />
             </div>
 
-            <h2>Growth Assumptions</h2>
+            <h2>Growth Assumptions <span className="thai-sub">สมมติฐานการเติบโต</span></h2>
             <div className="input-section">
-              <FormField label="Revenue Growth - Year 1" source="user" value={inputs.revenueGrowthYear1} onChange={v => update('revenueGrowthYear1', v)} step={0.01} />
-              <FormField label="Revenue Growth - Years 2-5" source="user" value={inputs.revenueGrowthYears2to5} onChange={v => update('revenueGrowthYears2to5', v)} step={0.01} />
-              <FormField label="Operating Margin - Next Year" source="default" value={inputs.operatingMarginNextYear} onChange={v => update('operatingMarginNextYear', v)} step={0.01} />
-              <FormField label="Target Operating Margin" source="default" value={inputs.targetOperatingMargin} onChange={v => update('targetOperatingMargin', v)} step={0.01} />
-              <FormField label="Year of Convergence" source="user" value={inputs.yearOfConvergence} onChange={v => update('yearOfConvergence', v)} />
-              <FormField label="Sales/Capital Ratio (Yr 1-5)" source="user" value={inputs.salesToCapitalRatioYears1to5} onChange={v => update('salesToCapitalRatioYears1to5', v)} step={0.1} />
-              <FormField label="Sales/Capital Ratio (Yr 6-10)" source="user" value={inputs.salesToCapitalRatioYears6to10} onChange={v => update('salesToCapitalRatioYears6to10', v)} step={0.1} />
+              <FormField label="Revenue Growth - Year 1" hint="อัตราเติบโตของรายได้ปีแรก" source="user" value={inputs.revenueGrowthYear1} onChange={v => update('revenueGrowthYear1', v)} step={0.01} />
+              <FormField label="Revenue Growth - Years 2-5" hint="อัตราเติบโตของรายได้ปีที่ 2-5" source="user" value={inputs.revenueGrowthYears2to5} onChange={v => update('revenueGrowthYears2to5', v)} step={0.01} />
+              <FormField label="Operating Margin - Next Year" hint="อัตรากำไรจากการดำเนินงานปีถัดไป" source="default" value={inputs.operatingMarginNextYear} onChange={v => update('operatingMarginNextYear', v)} step={0.01} />
+              <FormField label="Target Operating Margin" hint="อัตรากำไรจากการดำเนินงานเป้าหมาย" source="default" value={inputs.targetOperatingMargin} onChange={v => update('targetOperatingMargin', v)} step={0.01} />
+              <FormField label="Year of Convergence" hint="จำนวนปีที่อัตรากำไรจะลู่เข้าสู่เป้าหมาย" source="user" value={inputs.yearOfConvergence} onChange={v => update('yearOfConvergence', v)} />
+              <FormField label="Sales/Capital Ratio (Yr 1-5)" hint="อัตราส่วนรายได้ต่อเงินลงทุนปีที่ 1-5" source="user" value={inputs.salesToCapitalRatioYears1to5} onChange={v => update('salesToCapitalRatioYears1to5', v)} step={0.1} />
+              <FormField label="Sales/Capital Ratio (Yr 6-10)" hint="อัตราส่วนรายได้ต่อเงินลงทุนปีที่ 6-10" source="user" value={inputs.salesToCapitalRatioYears6to10} onChange={v => update('salesToCapitalRatioYears6to10', v)} step={0.1} />
             </div>
 
-            <h2>Discount Rate</h2>
+            <h2>Discount Rate <span className="thai-sub">อัตราคิดลด</span></h2>
             <div className="input-section">
-              <FormField label="Risk-free Rate" source="default" value={inputs.riskFreeRate} onChange={v => update('riskFreeRate', v)} step={0.01} />
-              <FormField label="Cost of Capital (from WACC)" source="user" value={inputs.costOfCapital} onChange={v => update('costOfCapital', v)} step={0.01} />
-              <FormField label="Marginal Tax Rate" source="default" value={inputs.marginalTaxRate} onChange={v => update('marginalTaxRate', v)} step={0.01} />
+              <FormField label="Risk-free Rate" hint="อัตราดอกเบี้ยไม่มีความเสี่ยง (พันธบัตรรัฐบาล)" source="default" value={inputs.riskFreeRate} onChange={v => update('riskFreeRate', v)} step={0.01} />
+              <FormField label="Cost of Capital (from WACC)" hint="ต้นทุนทุนถัวเฉลี่ยถ่วงน้ำหนัก" source="user" value={inputs.costOfCapital} onChange={v => update('costOfCapital', v)} step={0.01} />
+              <FormField label="Marginal Tax Rate" hint="อัตราภาษีขั้นสูง" source="default" value={inputs.marginalTaxRate} onChange={v => update('marginalTaxRate', v)} step={0.01} />
             </div>
 
             <div className="input-section">
-              <FormField label="Employee Options Outstanding" source="user" type="checkbox" value={inputs.hasOptions ? 1 : 0} onChange={v => update('hasOptions', v === 1)} checked={inputs.hasOptions} />
+              <FormField label="Employee Options Outstanding" hint="สิทธิ์ซื้อหุ้นพนักงานที่ยังไม่ได้ใช้" source="user" type="checkbox" value={inputs.hasOptions ? 1 : 0} onChange={v => update('hasOptions', v === 1)} checked={inputs.hasOptions} />
               {inputs.hasOptions && <>
-                <FormField label="Number of Options" source="user" value={inputs.optionCount} onChange={v => update('optionCount', v)} />
-                <FormField label="Avg Strike Price" source="user" value={inputs.optionStrike} onChange={v => update('optionStrike', v)} step={0.01} />
+                <FormField label="Number of Options" hint="จำนวนสิทธิ์ซื้อหุ้น" source="user" value={inputs.optionCount} onChange={v => update('optionCount', v)} />
+                <FormField label="Avg Strike Price" hint="ราคาใช้สิทธิ์เฉลี่ย" source="user" value={inputs.optionStrike} onChange={v => update('optionStrike', v)} step={0.01} />
               </>}
             </div>
 
-            <button onClick={compute} className="btn-primary calc-btn">Calculate Valuation</button>
+            <button onClick={compute} className="btn-primary calc-btn">Calculate Valuation <span className="thai-sub">คำนวณมูลค่า</span></button>
           </div>
 
           {result && (
             <div className="calc-results">
-              <h2>Valuation Result</h2>
+              <h2>Valuation Result <span className="thai-sub">ผลการประเมินมูลค่า</span></h2>
               <div className="result-summary">
                 <div className="result-card result-card-main">
-                  <span className="result-label">Value per Share</span>
+                  <span className="result-label">Value per Share <span className="thai-sub">มูลค่าต่อหุ้น</span></span>
                   <span className="result-value">{result.valuePerShare.toFixed(2)}</span>
                   <span className="result-compare">
                     vs. Market Price: {inputs.currentStockPrice.toFixed(2)}
@@ -125,33 +126,33 @@ export default function FcffSimpleDcf() {
                   </span>
                 </div>
                 <div className="result-card">
-                  <span className="result-label">PV of Cash Flows</span>
+                  <span className="result-label">PV of Cash Flows <span className="thai-sub">มูลค่าปัจจุบันของกระแสเงินสด</span></span>
                   <span className="result-number">{fmtCompact(result.pvCashFlows)}</span>
                 </div>
                 <div className="result-card">
-                  <span className="result-label">PV of Terminal Value</span>
+                  <span className="result-label">PV of Terminal Value <span className="thai-sub">มูลค่าปัจจุบันของมูลค่าตัวท้าย</span></span>
                   <span className="result-number">{fmtCompact(result.pvTerminalValue)}</span>
                 </div>
                 <div className="result-card">
-                  <span className="result-label">Operating Asset Value</span>
+                  <span className="result-label">Operating Asset Value <span className="thai-sub">มูลค่าสินทรัพย์จากการดำเนินงาน</span></span>
                   <span className="result-number">{fmtCompact(result.valueOfOperatingAssets)}</span>
                 </div>
                 <div className="result-card">
-                  <span className="result-label">Equity Value</span>
+                  <span className="result-label">Equity Value <span className="thai-sub">มูลค่าส่วนของผู้ถือหุ้น</span></span>
                   <span className="result-number">{fmtCompact(result.valueOfEquity)}</span>
                 </div>
               </div>
 
-              <h3>Diagnostics</h3>
+              <h3>Diagnostics <span className="thai-sub">การวิเคราะห์เชิงลึก</span></h3>
               <div className="diagnostics">
-                <div className="diag-item"><span>Revenue Y10</span><span>{fmtCompact(result.diagnostics.revenueYear10)}</span></div>
-                <div className="diag-item"><span>EBIT Y10</span><span>{fmtCompact(result.diagnostics.ebitYear10)}</span></div>
-                <div className="diag-item"><span>ROIC Y10</span><span>{fmtPercent(result.diagnostics.roicYear10)}</span></div>
-                <div className="diag-item"><span>Cost of Capital Y10</span><span>{fmtPercent(result.diagnostics.costOfCapitalYear10)}</span></div>
-                <div className="diag-item"><span>Terminal Growth</span><span>{fmtPercent(result.diagnostics.terminalGrowthRate)}</span></div>
+                <div className="diag-item"><span>Revenue Y10 <span className="thai-sub">รายได้ปีที่ 10</span></span><span>{fmtCompact(result.diagnostics.revenueYear10)}</span></div>
+                <div className="diag-item"><span>EBIT Y10 <span className="thai-sub">กำไรดำเนินงานปีที่ 10</span></span><span>{fmtCompact(result.diagnostics.ebitYear10)}</span></div>
+                <div className="diag-item"><span>ROIC Y10 <span className="thai-sub">อัตราผลตอบแทนเงินลงทุนปีที่ 10</span></span><span>{fmtPercent(result.diagnostics.roicYear10)}</span></div>
+                <div className="diag-item"><span>Cost of Capital Y10 <span className="thai-sub">ต้นทุนทุนปีที่ 10</span></span><span>{fmtPercent(result.diagnostics.costOfCapitalYear10)}</span></div>
+                <div className="diag-item"><span>Terminal Growth <span className="thai-sub">อัตราเติบโตตัวท้าย</span></span><span>{fmtPercent(result.diagnostics.terminalGrowthRate)}</span></div>
               </div>
 
-              <h3>10-Year Projection</h3>
+              <h3>10-Year Projection <span className="thai-sub">โปรเจคชัน 10 ปี</span></h3>
               <div className="table-scroll">
                 <table>
                   <thead>

@@ -4,6 +4,7 @@ import './FormField.css'
 
 export interface FormFieldProps {
   label: string
+  hint?: string
   source: 'auto' | 'user' | 'default'
   value: number
   onChange: (v: number) => void
@@ -24,6 +25,7 @@ const SOURCE_META: Record<string, { badge: string; tooltip: string; className: s
 
 export default function FormField({
   label,
+  hint,
   source,
   value,
   onChange,
@@ -54,6 +56,7 @@ export default function FormField({
           </span>
         )}
       </label>
+      {hint && <span className="ff-hint">{hint}</span>}
 
       {type === 'checkbox' ? (
         <input

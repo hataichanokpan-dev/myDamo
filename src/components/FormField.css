@@ -48,6 +48,14 @@
   text-transform: uppercase;
 }
 
+/* Thai hint */
+.ff-hint {
+  font-size: 11px;
+  color: var(--color-ink-muted-48);
+  line-height: 1.35;
+  margin-top: -2px;
+}
+
 /* Badge */
 .ff-badge {
   display: inline-flex;

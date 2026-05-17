@@ -37,7 +37,7 @@ export default function TickerSearch({ onData }: Props) {
           value={ticker}
           onChange={e => setTicker(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleFetch()}
-          placeholder="Enter ticker (e.g. AAPL, MSFT, PTT.BK)"
+          placeholder="กรอก ticker (เช่น AAPL, MSFT, PTT.BK)"
           className="ticker-input"
         />
         <button onClick={handleFetch} disabled={loading} className="btn-primary ticker-btn">
@@ -45,7 +45,7 @@ export default function TickerSearch({ onData }: Props) {
         </button>
       </div>
       {error && <p className="ticker-error">{error}</p>}
-      <p className="ticker-hint">International stocks: add exchange suffix manually (e.g. PTT.BK, CPALL.BK for Thailand)</p>
+      <p className="ticker-hint">หุ้นต่างประเทศ: ใส่สกุลหุ้นด้วยตัวเอง (เช่น PTT.BK, CPALL.BK สำหรับไทย) — ค่าเริ่มต้นคือหุ้นสหรัฐ</p>
     </div>
   )
 }

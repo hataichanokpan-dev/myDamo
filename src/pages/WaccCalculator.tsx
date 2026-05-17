@@ -51,54 +51,55 @@ export default function WaccCalculator() {
     <div className="calc-page"><div className="container">
       <h1>WACC Calculator</h1>
       <p className="page-desc">Compute Weighted Average Cost of Capital with beta estimation, ERP, cost of debt, and operating lease adjustments.</p>
+      <p className="page-desc-thai">คำนวณต้นทุนทุนถัวเฉลี่ยถ่วงน้ำหนัก — ประเมิน Beta, ERP, ต้นทุนหนี้ และปรับสัญญาเช่า</p>
       <TickerSearch onData={handleAutoFill} />
       <div className="calc-grid">
         <div className="calc-inputs">
-          <h2>Market Data</h2>
+          <h2>Market Data <span className="thai-sub">ข้อมูลตลาด</span></h2>
           <div className="input-section">
-            <FormField label="Shares Outstanding" source="auto" value={inputs.sharesOutstanding} onChange={v => update('sharesOutstanding', v)} />
-            <FormField label="Market Price" source="auto" value={inputs.marketPricePerShare} onChange={v => update('marketPricePerShare', v)} step={0.01} />
-            <FormField label="Risk-free Rate" source="default" value={inputs.riskFreeRate} onChange={v => update('riskFreeRate', v)} step={0.01} />
-            <FormField label="Equity Risk Premium" source="user" value={inputs.directErp} onChange={v => update('directErp', v)} step={0.01} />
+            <FormField label="Shares Outstanding" hint="จำนวนหุ้นที่ชำระแล้ว" source="auto" value={inputs.sharesOutstanding} onChange={v => update('sharesOutstanding', v)} />
+            <FormField label="Market Price" hint="ราคาหุ้นในตลาด" source="auto" value={inputs.marketPricePerShare} onChange={v => update('marketPricePerShare', v)} step={0.01} />
+            <FormField label="Risk-free Rate" hint="อัตราดอกเบี้ยไม่มีความเสี่ยง" source="default" value={inputs.riskFreeRate} onChange={v => update('riskFreeRate', v)} step={0.01} />
+            <FormField label="Equity Risk Premium" hint="ค่าเบี้ยประกันความเสี่ยงหุ้น" source="user" value={inputs.directErp} onChange={v => update('directErp', v)} step={0.01} />
           </div>
-          <h2>Beta</h2>
+          <h2>Beta <span className="thai-sub">ความเสี่ยงเชิงระบบ</span></h2>
           <div className="input-section">
-            <FormField label="Approach" source="user" type="select" value={BETA_OPTIONS.findIndex(o => o.value === inputs.betaApproach)} onChange={v => {
+            <FormField label="Approach" hint="วิธีคำนวณ Beta" source="user" type="select" value={BETA_OPTIONS.findIndex(o => o.value === inputs.betaApproach)} onChange={v => {
               const opt = BETA_OPTIONS[v]
               if (opt) update('betaApproach', opt.value)
             }} options={BETA_OPTIONS.map((o, i) => ({ value: String(i), label: o.label }))} />
-            <FormField label="Unlevered Beta" source="user" value={inputs.unleveredBeta} onChange={v => update('unleveredBeta', v)} step={0.01} />
-            <FormField label="Debt/Equity Ratio" source="user" value={inputs.debtToEquityRatio} onChange={v => update('debtToEquityRatio', v)} step={0.01} />
+            <FormField label="Unlevered Beta" hint="Beta ก่อนปรับหนี้ (Bottom-up)" source="user" value={inputs.unleveredBeta} onChange={v => update('unleveredBeta', v)} step={0.01} />
+            <FormField label="Debt/Equity Ratio" hint="สัดส่วนหนี้ต่อส่วนของผู้ถือหุ้น" source="user" value={inputs.debtToEquityRatio} onChange={v => update('debtToEquityRatio', v)} step={0.01} />
           </div>
-          <h2>Debt</h2>
+          <h2>Debt <span className="thai-sub">หนี้สิน</span></h2>
           <div className="input-section">
-            <FormField label="Book Value of Debt" source="auto" value={inputs.bookValueOfDebt} onChange={v => update('bookValueOfDebt', v)} />
-            <FormField label="Interest Expense" source="auto" value={inputs.interestExpense} onChange={v => update('interestExpense', v)} />
-            <FormField label="Avg Maturity (years)" source="user" value={inputs.averageMaturity} onChange={v => update('averageMaturity', v)} />
-            <FormField label="Pre-tax Cost of Debt" source="user" value={inputs.directCostOfDebt} onChange={v => update('directCostOfDebt', v)} step={0.01} />
+            <FormField label="Book Value of Debt" hint="มูลค่าตามบัญชีของหนี้สิน" source="auto" value={inputs.bookValueOfDebt} onChange={v => update('bookValueOfDebt', v)} />
+            <FormField label="Interest Expense" hint="ค่าใช้จ่ายดอกเบี้ย" source="auto" value={inputs.interestExpense} onChange={v => update('interestExpense', v)} />
+            <FormField label="Avg Maturity (years)" hint="อายุเฉลี่ยของหนี้ (ปี)" source="user" value={inputs.averageMaturity} onChange={v => update('averageMaturity', v)} />
+            <FormField label="Pre-tax Cost of Debt" hint="ต้นทุนหนี้ก่อนภาษี" source="user" value={inputs.directCostOfDebt} onChange={v => update('directCostOfDebt', v)} step={0.01} />
           </div>
-          <h2>Tax</h2>
+          <h2>Tax <span className="thai-sub">ภาษี</span></h2>
           <div className="input-section">
-            <FormField label="Tax Rate" source="user" value={inputs.taxRate} onChange={v => update('taxRate', v)} step={0.01} />
+            <FormField label="Tax Rate" hint="อัตราภาษี" source="user" value={inputs.taxRate} onChange={v => update('taxRate', v)} step={0.01} />
           </div>
-          <button onClick={() => setResult(computeWacc(inputs))} className="btn-primary calc-btn">Calculate WACC</button>
+          <button onClick={() => setResult(computeWacc(inputs))} className="btn-primary calc-btn">Calculate WACC <span className="thai-sub">คำนวณ WACC</span></button>
         </div>
         {result && (
           <div className="calc-results">
-            <h2>WACC Result</h2>
+            <h2>WACC Result <span className="thai-sub">ผลการคำนวณ WACC</span></h2>
             <div className="result-summary">
               <div className="result-card result-card-main">
-                <span className="result-label">WACC</span>
+                <span className="result-label">WACC <span className="thai-sub">ต้นทุนทุนถัวเฉลี่ยถ่วงน้ำหนัก</span></span>
                 <span className="result-value">{fmtPercent(result.wacc)}</span>
                 <span></span>
               </div>
-              <div className="result-card"><span className="result-label">Cost of Equity</span><span className="result-number">{fmtPercent(result.costOfEquity)}</span></div>
-              <div className="result-card"><span className="result-label">Levered Beta</span><span className="result-number">{result.leveredBeta.toFixed(3)}</span></div>
-              <div className="result-card"><span className="result-label">After-tax Cost of Debt</span><span className="result-number">{fmtPercent(result.afterTaxCostOfDebt)}</span></div>
-              <div className="result-card"><span className="result-label">Equity Weight</span><span className="result-number">{fmtPercent(result.equityWeight)}</span></div>
-              <div className="result-card"><span className="result-label">Debt Weight</span><span className="result-number">{fmtPercent(result.debtWeight)}</span></div>
+              <div className="result-card"><span className="result-label">Cost of Equity <span className="thai-sub">ต้นทุนทุนส่วนของผู้ถือหุ้น</span></span><span className="result-number">{fmtPercent(result.costOfEquity)}</span></div>
+              <div className="result-card"><span className="result-label">Levered Beta <span className="thai-sub">Beta หลังปรับหนี้</span></span><span className="result-number">{result.leveredBeta.toFixed(3)}</span></div>
+              <div className="result-card"><span className="result-label">After-tax Cost of Debt <span className="thai-sub">ต้นทุนหนี้หลังภาษี</span></span><span className="result-number">{fmtPercent(result.afterTaxCostOfDebt)}</span></div>
+              <div className="result-card"><span className="result-label">Equity Weight <span className="thai-sub">น้ำหนักส่วนผู้ถือหุ้น</span></span><span className="result-number">{fmtPercent(result.equityWeight)}</span></div>
+              <div className="result-card"><span className="result-label">Debt Weight <span className="thai-sub">น้ำหนักหนี้สิน</span></span><span className="result-number">{fmtPercent(result.debtWeight)}</span></div>
               {result.debtValueOfLeases > 0 && (
-                <div className="result-card"><span className="result-label">Lease Debt Value</span><span className="result-number">{fmtCompact(result.debtValueOfLeases)}</span></div>
+                <div className="result-card"><span className="result-label">Lease Debt Value <span className="thai-sub">มูลค่าหนี้สัญญาเช่า</span></span><span className="result-number">{fmtCompact(result.debtValueOfLeases)}</span></div>
               )}
             </div>
           </div>
