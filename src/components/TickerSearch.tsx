@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import type { YahooFinanceData } from '../hooks/useYahooFinance'
 import { fetchStockData } from '../hooks/useYahooFinance'
+import Icon from './Icon'
+import Spinner from './Spinner'
 import './TickerSearch.css'
 
 interface Props {
@@ -39,7 +41,7 @@ export default function TickerSearch({ onData }: Props) {
           className="ticker-input"
         />
         <button onClick={handleFetch} disabled={loading} className="btn-primary ticker-btn">
-          {loading ? 'Loading...' : 'Auto-Fill'}
+          {loading ? <><Spinner size="sm" /> Loading...</> : <><Icon name="search" size="sm" /> Auto-Fill</>}
         </button>
       </div>
       {error && <p className="ticker-error">{error}</p>}

@@ -1,6 +1,6 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow: hidden auto; }
 
 body {
   font-family: var(--font-body);
@@ -10,6 +10,7 @@ body {
   letter-spacing: -0.374px;
   color: var(--color-ink);
   background: var(--color-canvas);
+  animation: pageIn 0.3s ease;
 }
 
 h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; color: var(--color-ink); line-height: 1.1; }
@@ -52,25 +53,62 @@ td { padding: 8px 12px; border-bottom: 1px solid var(--color-divider-soft); }
 tr:hover td { background: var(--color-canvas-parchment); }
 
 .btn-primary {
-  display: inline-flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   background: var(--color-primary); color: #fff;
   border: none; border-radius: var(--radius-pill);
   padding: 11px 22px; font-size: 17px; font-weight: 400;
-  letter-spacing: -0.374px; transition: transform 0.1s;
+  letter-spacing: -0.374px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
-.btn-primary:active { transform: scale(0.95); }
+.btn-primary:hover { box-shadow: 0 2px 12px rgba(0, 102, 204, 0.25); }
+.btn-primary:active { transform: scale(0.97); }
 .btn-primary:focus-visible { outline: 2px solid var(--color-primary-focus); outline-offset: 2px; }
 
 .btn-secondary {
-  display: inline-flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   background: transparent; color: var(--color-primary);
   border: 1px solid var(--color-primary); border-radius: var(--radius-pill);
   padding: 11px 22px; font-size: 17px; font-weight: 400;
-  letter-spacing: -0.374px; transition: transform 0.1s;
+  letter-spacing: -0.374px;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
-.btn-secondary:active { transform: scale(0.95); }
+.btn-secondary:hover { background: rgba(0, 102, 204, 0.06); }
+.btn-secondary:active { transform: scale(0.97); }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-lg); overflow-x: hidden; }
+
+/* ── Animations ── */
+
+@keyframes pageIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.35s ease both;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 @media (max-width: 834px) {
   h1 { font-size: 34px; }

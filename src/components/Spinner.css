@@ -1,0 +1,30 @@
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner svg {
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-track {
+  stroke: rgba(0, 0, 0, 0.08);
+  stroke-width: 2.5;
+}
+
+.spinner-fill {
+  stroke: var(--color-primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 50 100;
+  stroke-dashoffset: 0;
+}
+
+.spinner--sm svg { width: 16px; height: 16px; }
+.spinner--md svg { width: 22px; height: 22px; }
+.spinner--lg svg { width: 32px; height: 32px; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

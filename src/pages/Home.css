@@ -8,12 +8,13 @@
   background: var(--color-surface-tile-1);
   color: var(--color-body-on-dark);
 }
-.hero-dark h1 { color: var(--color-body-on-dark); font-size: 56px; line-height: 1.07; letter-spacing: -0.28px; }
+.hero-dark h1 { color: var(--color-body-on-dark); font-size: 56px; line-height: 1.07; letter-spacing: -0.28px; animation: fadeUp 0.5s ease both; }
 .hero-subtitle {
   font-size: 21px; font-weight: 300; line-height: 1.5;
   color: var(--color-body-muted); max-width: 680px; margin: var(--space-lg) auto;
+  animation: fadeUp 0.5s 0.1s ease both;
 }
-.hero-actions { display: flex; gap: var(--space-md); justify-content: center; margin-top: var(--space-xl); }
+.hero-actions { display: flex; gap: var(--space-md); justify-content: center; margin-top: var(--space-xl); animation: fadeUp 0.5s 0.2s ease both; }
 .hero-actions .btn-secondary { color: var(--color-primary-on-dark); border-color: var(--color-primary-on-dark); }
 
 .models-section { padding: var(--space-section) 0; background: var(--color-canvas-parchment); }
@@ -29,9 +30,20 @@
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   text-decoration: none; color: var(--color-ink);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeUp 0.4s ease both;
 }
-.model-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-decoration: none; }
+.model-card:nth-child(1) { animation-delay: 0.05s; }
+.model-card:nth-child(2) { animation-delay: 0.1s; }
+.model-card:nth-child(3) { animation-delay: 0.15s; }
+.model-card:nth-child(4) { animation-delay: 0.2s; }
+.model-card:nth-child(5) { animation-delay: 0.25s; }
+.model-card:nth-child(6) { animation-delay: 0.3s; }
+.model-card:nth-child(7) { animation-delay: 0.35s; }
+.model-card:nth-child(8) { animation-delay: 0.4s; }
+.model-card:nth-child(9) { animation-delay: 0.45s; }
+.model-card:nth-child(10) { animation-delay: 0.5s; }
+.model-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); text-decoration: none; }
 .model-tag {
   display: inline-block; font-size: 11px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase;

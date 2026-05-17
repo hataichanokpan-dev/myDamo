@@ -29,6 +29,7 @@
   padding: var(--space-lg);
   min-width: 0;
   overflow: hidden;
+  animation: slideUp 0.4s ease both;
 }
 .calc-results h2 { font-size: 21px; font-weight: 600; letter-spacing: 0.231px; margin-bottom: var(--space-md); }
 .calc-results h3 { font-size: 17px; font-weight: 600; margin-top: var(--space-lg); margin-bottom: var(--space-sm); }

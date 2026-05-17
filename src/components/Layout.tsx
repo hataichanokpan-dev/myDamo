@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
+import Icon from './Icon'
 import './Layout.css'
 
 const NAV_ITEMS = [
-  { path: '/', label: 'Home' },
-  { path: '/fcff-simple', label: 'DCF Simple' },
-  { path: '/fcff-full', label: 'DCF Full' },
-  { path: '/high-growth', label: 'High Growth' },
-  { path: '/wacc', label: 'WACC' },
-  { path: '/model-selector', label: 'Model Pick' },
-  { path: '/implied-roc-roe', label: 'ROC/ROE' },
-  { path: '/implied-erp', label: 'ERP' },
-  { path: '/rd-converter', label: 'R&D' },
-  { path: '/operating-lease', label: 'Lease' },
-  { path: '/normalized-earnings', label: 'Normalize' },
+  { path: '/', label: 'Home', icon: 'home' },
+  { path: '/fcff-simple', label: 'DCF Simple', icon: 'chart' },
+  { path: '/fcff-full', label: 'DCF Full', icon: 'layers' },
+  { path: '/high-growth', label: 'High Growth', icon: 'rocket' },
+  { path: '/wacc', label: 'WACC', icon: 'gauge' },
+  { path: '/model-selector', label: 'Model Pick', icon: 'compass' },
+  { path: '/implied-roc-roe', label: 'ROC/ROE', icon: 'trendingUp' },
+  { path: '/implied-erp', label: 'ERP', icon: 'percent' },
+  { path: '/rd-converter', label: 'R&D', icon: 'beaker' },
+  { path: '/operating-lease', label: 'Lease', icon: 'fileText' },
+  { path: '/normalized-earnings', label: 'Normalize', icon: 'repeat' },
 ]
 
 export default function Layout() {
@@ -25,15 +26,21 @@ export default function Layout() {
     <div className="app-layout">
       <nav className="global-nav">
         <div className="global-nav-inner">
-          <Link to="/" className="nav-logo">Damodaran</Link>
+          <Link to="/" className="nav-logo">
+            <Icon name="chart" size="md" />
+            <span>Damodaran</span>
+          </Link>
           <div className="nav-links">
             {NAV_ITEMS.slice(1).map(item => (
               <Link key={item.path} to={item.path} className={`nav-link ${pathname === item.path ? 'active' : ''}`}>
-                {item.label}
+                <Icon name={item.icon as any} size="sm" />
+                <span>{item.label}</span>
               </Link>
             ))}
           </div>
-          <button className="nav-menu-btn" aria-label="Menu" onClick={() => setDrawerOpen(!drawerOpen)}>&#9776;</button>
+          <button className="nav-menu-btn" aria-label="Menu" onClick={() => setDrawerOpen(!drawerOpen)}>
+            <Icon name="menu" size="md" />
+          </button>
         </div>
       </nav>
 
@@ -42,13 +49,19 @@ export default function Layout() {
       )}
       <aside className={`mobile-drawer ${drawerOpen ? 'open' : ''}`}>
         <div className="drawer-header">
-          <Link to="/" className="nav-logo" onClick={() => setDrawerOpen(false)}>Damodaran</Link>
-          <button className="drawer-close-btn" aria-label="Close" onClick={() => setDrawerOpen(false)}>&times;</button>
+          <Link to="/" className="nav-logo" onClick={() => setDrawerOpen(false)}>
+            <Icon name="chart" size="md" />
+            <span>Damodaran</span>
+          </Link>
+          <button className="drawer-close-btn" aria-label="Close" onClick={() => setDrawerOpen(false)}>
+            <Icon name="x" size="md" />
+          </button>
         </div>
         <nav className="drawer-nav">
           {NAV_ITEMS.map(item => (
             <Link key={item.path} to={item.path} className={`drawer-link ${pathname === item.path ? 'active' : ''}`} onClick={() => setDrawerOpen(false)}>
-              {item.label}
+              <Icon name={item.icon as any} size="sm" />
+              <span>{item.label}</span>
             </Link>
           ))}
         </nav>
@@ -57,7 +70,10 @@ export default function Layout() {
       {pathname !== '/' && currentLabel && (
         <div className="page-title-bar">
           <div className="page-title-inner">
-            <Link to="/" className="page-title-back">Home</Link>
+            <Link to="/" className="page-title-back">
+              <Icon name="home" size="sm" />
+              Home
+            </Link>
             <span className="page-title-sep">/</span>
             <span className="page-title-current">{currentLabel}</span>
           </div>
