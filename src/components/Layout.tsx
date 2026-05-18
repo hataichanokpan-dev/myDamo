@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { path: '/fcff-full', label: 'DCF Full', icon: 'layers' },
   { path: '/high-growth', label: 'High Growth', icon: 'rocket' },
   { path: '/wacc', label: 'WACC', icon: 'gauge' },
+  { path: '/country-risk', label: 'Country Risk', icon: 'shield' },
   { path: '/model-selector', label: 'Model Pick', icon: 'compass' },
   { path: '/implied-roc-roe', label: 'ROC/ROE', icon: 'trendingUp' },
   { path: '/implied-erp', label: 'ERP', icon: 'percent' },

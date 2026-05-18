@@ -1,8 +1,16 @@
 import { useState, useCallback } from 'react'
 import type { YahooFinanceData } from '../hooks/useYahooFinance'
+import type { CountryRiskRecord } from '../data/countryRiskLatest'
 import type { WaccInputs } from '../engines/waccCalculator'
 import { computeWacc } from '../engines/waccCalculator'
+import {
+  calculateWeightedCountryRisk,
+  listCountryRiskRecords,
+  type CountryExposure,
+} from '../engines/countryRisk'
 import TickerSearch from '../components/TickerSearch'
+import CountryRiskPanel from '../components/CountryRiskPanel'
+import Icon from '../components/Icon'
 import FormField from '../components/FormField'
 import { fmtPercent, fmtCompact } from '../utils/format'
 import useAutoScrollResult from '../hooks/useAutoScrollResult'
@@ -29,10 +37,35 @@ const BETA_OPTIONS = [
   { value: 'regression', label: 'Regression Beta' },
 ]
 
+const COUNTRY_OPTIONS = listCountryRiskRecords()
+
 export default function WaccCalculator() {
   const [inputs, setInputs] = useState<WaccInputs>(DEFAULT)
+  const [countryExposures, setCountryExposures] = useState<CountryExposure[]>([{ country: 'United States', weight: 100 }])
+  const [countryRiskApplied, setCountryRiskApplied] = useState(false)
   const [result, setResult] = useState<ReturnType<typeof computeWacc> | null>(null)
   const resultRef = useAutoScrollResult(result)
+  const weightedRisk = calculateWeightedCountryRisk(countryExposures)
+  const erpDelta = Math.abs(inputs.directErp - weightedRisk.totalEquityRiskPremium)
+
+  const applyWeightedCountryRisk = useCallback((exposures = countryExposures) => {
+    const weighted = calculateWeightedCountryRisk(exposures)
+    if (weighted.totalEquityRiskPremium <= 0) return
+    setInputs(prev => ({
+      ...prev,
+      erpApproach: 'operating-regions',
+      directErp: weighted.totalEquityRiskPremium,
+      operatingRegions: weighted.records.map((item) => ({
+        region: item.country,
+        revenue: item.weight,
+        erp: item.risk.totalEquityRiskPremium,
+      })),
+      taxRate: weighted.taxRate ?? prev.taxRate,
+      marginalTaxRate: weighted.taxRate ?? prev.marginalTaxRate,
+      taxRateApproach: weighted.taxRate != null ? 'direct' : prev.taxRateApproach,
+    }))
+    setCountryRiskApplied(true)
+  }, [countryExposures])
 
   const handleAutoFill = useCallback((data: YahooFinanceData) => {
     setInputs(prev => ({
@@ -47,14 +80,32 @@ export default function WaccCalculator() {
     }))
   }, [])
 
+  const handleCountryRiskApply = useCallback((risk: CountryRiskRecord) => {
+    const exposures = [{ country: risk.country, weight: 100 }]
+    setCountryExposures(exposures)
+    applyWeightedCountryRisk(exposures)
+  }, [applyWeightedCountryRisk])
+
   const update = (key: keyof WaccInputs, value: any) => setInputs(prev => ({ ...prev, [key]: value }))
+  const updateExposure = (index: number, patch: Partial<CountryExposure>) => {
+    setCountryExposures(prev => prev.map((item, i) => i === index ? { ...item, ...patch } : item))
+    setCountryRiskApplied(false)
+  }
+  const addExposure = () => {
+    setCountryExposures(prev => [...prev, { country: 'United States', weight: 0 }])
+    setCountryRiskApplied(false)
+  }
+  const removeExposure = (index: number) => {
+    setCountryExposures(prev => prev.filter((_, i) => i !== index))
+    setCountryRiskApplied(false)
+  }
 
   return (
     <div className="calc-page"><div className="container">
       <h1>WACC Calculator</h1>
       <p className="page-desc">Compute Weighted Average Cost of Capital with beta estimation, ERP, cost of debt, and operating lease adjustments.</p>
       <p className="page-desc-thai">คำนวณต้นทุนทุนถัวเฉลี่ยถ่วงน้ำหนัก — ประเมิน Beta, ERP, ต้นทุนหนี้ และปรับสัญญาเช่า</p>
-      <TickerSearch onData={handleAutoFill} />
+      <TickerSearch onData={handleAutoFill} onCountryRiskApply={handleCountryRiskApply} />
       <div className="calc-grid">
         <div className="calc-inputs">
           <h2>Market Data <span className="thai-sub">ข้อมูลตลาด</span></h2>
@@ -63,6 +114,50 @@ export default function WaccCalculator() {
             <FormField label="Market Price" hint="ราคาหุ้นในตลาด" source="auto" value={inputs.marketPricePerShare} onChange={v => update('marketPricePerShare', v)} step={0.01} />
             <FormField label="Risk-free Rate" hint="อัตราดอกเบี้ยไม่มีความเสี่ยง" source="default" value={inputs.riskFreeRate} onChange={v => update('riskFreeRate', v)} step={0.01} />
             <FormField label="Equity Risk Premium" hint="ค่าเบี้ยประกันความเสี่ยงหุ้น" source="user" value={inputs.directErp} onChange={v => update('directErp', v)} step={0.01} />
+          </div>
+          <h2>Country Risk <span className="thai-sub">ความเสี่ยงรายประเทศ</span></h2>
+          <div className="country-exposure-editor">
+            {countryExposures.map((exposure, index) => (
+              <div className="country-exposure-row" key={`${exposure.country}-${index}`}>
+                <select value={exposure.country} onChange={(event) => updateExposure(index, { country: event.target.value })}>
+                  {COUNTRY_OPTIONS.map((record) => (
+                    <option key={record.country} value={record.country}>{record.country}</option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={exposure.weight}
+                  onChange={(event) => updateExposure(index, { weight: parseFloat(event.target.value) || 0 })}
+                  aria-label="Revenue exposure weight"
+                />
+                <button type="button" aria-label="Remove exposure" onClick={() => removeExposure(index)}>
+                  <Icon name="x" size="sm" />
+                </button>
+              </div>
+            ))}
+            <div className="country-exposure-actions">
+              <button type="button" onClick={addExposure}><Icon name="grid" size="sm" /> Add country</button>
+              <button type="button" onClick={() => applyWeightedCountryRisk()}><Icon name="shield" size="sm" /> Apply weighted ERP</button>
+            </div>
+            <CountryRiskPanel
+              weightedRisk={weightedRisk}
+              applied={countryRiskApplied}
+              compact
+              note={countryRiskApplied
+                ? 'Weighted ERP and tax rate are applied to the WACC inputs.'
+                : 'Edit revenue exposure, then apply the weighted country ERP.'}
+            />
+            {weightedRisk.totalEquityRiskPremium > 0 && erpDelta > 0.01 && (
+              <div className="assumption-warning">
+                <strong>ERP differs from country exposure</strong>
+                <span>
+                  Manual ERP is {fmtPercent(inputs.directErp)}, while weighted country ERP is {fmtPercent(weightedRisk.totalEquityRiskPremium)}.
+                </span>
+                <button type="button" onClick={() => applyWeightedCountryRisk()}>Use weighted ERP</button>
+              </div>
+            )}
           </div>
           <h2>Beta <span className="thai-sub">ความเสี่ยงเชิงระบบ</span></h2>
           <div className="input-section">

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "import:country-risk": "python scripts/import-country-risk.py",
     "preview": "vite preview"
   },
   "dependencies": {

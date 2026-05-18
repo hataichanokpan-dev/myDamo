@@ -1,10 +1,12 @@
 import { useState, useCallback } from 'react'
 import type { YahooFinanceData } from '../hooks/useYahooFinance'
+import type { CountryRiskRecord } from '../data/countryRiskLatest'
 import type { FcffSimpleInputs } from '../engines/fcffSimpleDcf'
 import { computeFcffSimpleDcf } from '../engines/fcffSimpleDcf'
 import TickerSearch from '../components/TickerSearch'
 import FormField from '../components/FormField'
 import ProjectionChart from '../components/ProjectionChart'
+import CountryRiskPanel from '../components/CountryRiskPanel'
 import { fmtNumber, fmtPercent, fmtCompact } from '../utils/format'
 import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
@@ -37,6 +39,7 @@ const DEFAULT_INPUTS: FcffSimpleInputs = {
 
 export default function FcffSimpleDcf() {
   const [inputs, setInputs] = useState<FcffSimpleInputs>(DEFAULT_INPUTS)
+  const [selectedCountryRisk, setSelectedCountryRisk] = useState<CountryRiskRecord | null>(null)
   const [result, setResult] = useState<ReturnType<typeof computeFcffSimpleDcf> | null>(null)
   const resultRef = useAutoScrollResult(result)
 
@@ -55,6 +58,15 @@ export default function FcffSimpleDcf() {
     }))
   }, [])
 
+  const handleCountryRiskApply = useCallback((risk: CountryRiskRecord) => {
+    setSelectedCountryRisk(risk)
+    setInputs(prev => ({
+      ...prev,
+      effectiveTaxRate: risk.taxRate ?? prev.effectiveTaxRate,
+      marginalTaxRate: risk.taxRate ?? prev.marginalTaxRate,
+    }))
+  }, [])
+
   const update = (key: keyof FcffSimpleInputs, value: any) => {
     setInputs(prev => ({ ...prev, [key]: value }))
   }
@@ -70,7 +82,7 @@ export default function FcffSimpleDcf() {
         <p className="page-desc">10-year Free Cash Flow to Firm model. Auto-fetch financials, set your assumptions, get intrinsic value per share.</p>
         <p className="page-desc-thai">โมเดลกระแสเงินสดอิสระของบริษัท 10 ปี — ดึงข้อมูลการเงินอัตโนมัติ ตั้งสมมติฐาน คำนวณมูลค่าหุ้นที่แท้จริง</p>
 
-        <TickerSearch onData={(data) => handleAutoFill(data)} />
+        <TickerSearch onData={(data) => handleAutoFill(data)} onCountryRiskApply={handleCountryRiskApply} />
 
         <div className="calc-grid">
           <div className="calc-inputs">
@@ -86,6 +98,12 @@ export default function FcffSimpleDcf() {
               <FormField label="Stock Price" hint="ราคาหุ้นปัจจุบัน" source="auto" value={inputs.currentStockPrice} onChange={v => update('currentStockPrice', v)} step={0.01} />
               <FormField label="Effective Tax Rate" hint="อัตราภาษีเฉลี่ยที่จ่ายจริง" source="default" value={inputs.effectiveTaxRate} onChange={v => update('effectiveTaxRate', v)} step={0.01} />
             </div>
+            <CountryRiskPanel
+              risk={selectedCountryRisk}
+              applied={!!selectedCountryRisk}
+              compact
+              note="Country tax rate was applied. Run WACC Calculator for a full country-adjusted ERP and cost of capital."
+            />
 
             <h2>Growth Assumptions <span className="thai-sub">สมมติฐานการเติบโต</span></h2>
             <div className="input-section">

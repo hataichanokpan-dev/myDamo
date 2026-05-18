@@ -24,6 +24,89 @@
 .input-section input { width: 100%; height: 38px; font-size: 14px; padding: 0 10px; background: var(--color-canvas); }
 .input-section input[type="checkbox"] { width: auto; height: auto; }
 
+.country-exposure-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.country-exposure-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px 34px;
+  gap: 6px;
+}
+
+.country-exposure-row select,
+.country-exposure-row input {
+  min-width: 0;
+  height: 38px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-size: 13px;
+  padding: 0 9px;
+}
+
+.country-exposure-row button,
+.country-exposure-actions button {
+  min-height: 38px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas);
+  color: var(--color-ink-muted-80);
+}
+
+.country-exposure-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.country-exposure-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.assumption-warning {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-sm);
+  border: 1px solid rgba(255, 159, 10, 0.28);
+  border-radius: var(--radius-md);
+  background: rgba(255, 249, 237, 0.92);
+}
+
+.assumption-warning strong {
+  color: var(--color-ink);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.assumption-warning span {
+  color: var(--color-ink-muted-80);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.assumption-warning button {
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-pill);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .auto-tag {
   display: inline-block; font-size: 10px; font-weight: 600;
   background: var(--color-auto-fill); color: var(--color-primary);

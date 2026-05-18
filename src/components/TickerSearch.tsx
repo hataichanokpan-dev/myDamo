@@ -1,19 +1,26 @@
 import { useState } from 'react'
 import type { YahooFinanceData } from '../hooks/useYahooFinance'
 import { fetchStockData } from '../hooks/useYahooFinance'
+import { findCountryRisk, inferCountryFromTicker } from '../engines/countryRisk'
+import type { CountryRiskRecord } from '../data/countryRiskLatest'
+import CountryRiskPanel from './CountryRiskPanel'
 import Icon from './Icon'
 import Spinner from './Spinner'
 import './TickerSearch.css'
 
 interface Props {
   onData: (data: YahooFinanceData, ticker: string) => void
+  onCountryRiskApply?: (risk: CountryRiskRecord, data: YahooFinanceData) => void
 }
 
-export default function TickerSearch({ onData }: Props) {
+export default function TickerSearch({ onData, onCountryRiskApply }: Props) {
   const [ticker, setTicker] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [countryRisk, setCountryRisk] = useState<CountryRiskRecord | null>(null)
+  const [lastData, setLastData] = useState<YahooFinanceData | null>(null)
+  const [riskApplied, setRiskApplied] = useState(false)
 
   const handleFetch = async () => {
     const trimmed = ticker.trim().toUpperCase()
@@ -21,9 +28,19 @@ export default function TickerSearch({ onData }: Props) {
     setLoading(true)
     setError('')
     setSuccess('')
+    setCountryRisk(null)
+    setLastData(null)
+    setRiskApplied(false)
     try {
       const data = await fetchStockData(trimmed)
       onData(data, data.symbol)
+      const risk = findCountryRisk(data.country) ?? findCountryRisk(inferCountryFromTicker(trimmed) ?? '')
+      setCountryRisk(risk)
+      setLastData(data)
+      if (risk && onCountryRiskApply) {
+        onCountryRiskApply(risk, data)
+        setRiskApplied(true)
+      }
       setSuccess(`${data.symbol || trimmed} data loaded. Review the assumptions below.`)
       window.setTimeout(() => {
         document.querySelector('.calc-inputs')?.scrollIntoView({
@@ -67,6 +84,20 @@ export default function TickerSearch({ onData }: Props) {
       )}
       {error && <p className="ticker-error">{error}</p>}
       {success && !loading && <p className="ticker-success"><Icon name="activity" size="sm" /> {success}</p>}
+      {countryRisk && lastData && (
+        <CountryRiskPanel
+          risk={countryRisk}
+          marketData={lastData}
+          applied={riskApplied}
+          note={riskApplied
+            ? 'These assumptions were auto-applied from the Damodaran country risk dataset.'
+            : 'This page does not auto-apply country risk, but these values can guide your assumptions.'}
+          onApply={onCountryRiskApply ? () => {
+              onCountryRiskApply(countryRisk, lastData)
+              setRiskApplied(true)
+            } : undefined}
+        />
+      )}
       <p className="ticker-hint">หุ้นต่างประเทศ: ใส่สกุลหุ้นด้วยตัวเอง (เช่น PTT.BK, CPALL.BK สำหรับไทย) — ค่าเริ่มต้นคือหุ้นสหรัฐ</p>
     </div>
   )

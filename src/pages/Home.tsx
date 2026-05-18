@@ -7,6 +7,7 @@ const MODELS = [
   { path: '/fcff-full', title: 'FCFF Full DCF', desc: 'Advanced model with R&D, lease, normalized earnings, and beta adjustment.', thai: 'โมเดลขั้นสูง พร้อมปรับ R&D สัญญาเช่า และกำไรปกติ', tag: 'Advanced', icon: 'layers' },
   { path: '/high-growth', title: 'High Growth Valuation', desc: 'For negative earnings or high growth with NOL and yearly growth rates.', thai: 'สำหรับบริษัทขาดทุนหรือโตสูง รองรับ NOL รายปี', tag: 'Growth', icon: 'rocket' },
   { path: '/wacc', title: 'WACC Calculator', desc: 'Cost of capital with beta, ERP, cost of debt, and lease adjustments.', thai: 'คำนวณ WACC พร้อม Beta, ERP และต้นทุนหนี้', tag: 'Essential', icon: 'gauge' },
+  { path: '/country-risk', title: 'Country Risk Premiums', desc: 'Search Damodaran country ERP, CRP, tax rates, ratings, and regional risk.', thai: 'ค้นหา ERP, CRP, ภาษี และ rating รายประเทศจาก Damodaran', tag: 'Dataset', icon: 'shield' },
   { path: '/model-selector', title: 'Model Selector', desc: 'Answer a few questions to choose the right valuation approach.', thai: 'ตอบคำถามเพื่อเลือกโมเดลประเมินมูลค่าที่เหมาะสม', tag: 'Guide', icon: 'compass' },
   { path: '/implied-roc-roe', title: 'Implied ROC/ROE', desc: 'Check terminal return on capital against your cost of capital.', thai: 'ตรวจ ROC/ROE ที่สอดคล้องกับมูลค่าตัวท้าย', tag: 'Check', icon: 'trendingUp' },
   { path: '/implied-erp', title: 'Implied Equity Risk Premium', desc: 'Back out the ERP priced by the market from index assumptions.', thai: 'คำนวณ ERP ที่ตลาดกำลังกำหนดราคา', tag: 'Market', icon: 'percent' },

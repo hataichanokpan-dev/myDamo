@@ -11,6 +11,7 @@ import ImpliedErp from './pages/ImpliedErp'
 import RdConverter from './pages/RdConverter'
 import OperatingLeaseConverter from './pages/OperatingLeaseConverter'
 import NormalizedEarnings from './pages/NormalizedEarnings'
+import CountryRisk from './pages/CountryRisk'
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="rd-converter" element={<RdConverter />} />
         <Route path="operating-lease" element={<OperatingLeaseConverter />} />
         <Route path="normalized-earnings" element={<NormalizedEarnings />} />
+        <Route path="country-risk" element={<CountryRisk />} />
       </Route>
     </Routes>
   )

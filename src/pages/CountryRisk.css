@@ -1,0 +1,210 @@
+.country-risk-page {
+  padding: var(--space-xl) 0 var(--space-section);
+}
+
+.country-risk-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--space-lg);
+  align-items: end;
+  margin-bottom: var(--space-lg);
+}
+
+.country-risk-kicker {
+  display: inline-block;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.country-risk-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.country-risk-meta span,
+.country-risk-facts span {
+  padding: var(--space-sm);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-canvas);
+  color: var(--color-ink-muted-48);
+  font-size: 12px;
+}
+
+.country-risk-meta b,
+.country-risk-facts b {
+  display: block;
+  color: var(--color-ink);
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.country-risk-layout {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.country-risk-sidebar,
+.country-risk-data-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.86);
+  padding: var(--space-sm);
+}
+
+.country-risk-sidebar {
+  position: sticky;
+  top: 94px;
+  max-height: calc(100vh - 112px);
+  overflow: hidden;
+}
+
+.country-risk-search {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+  margin-bottom: var(--space-sm);
+}
+
+.country-risk-search input,
+.country-risk-search select {
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--color-canvas);
+  font-size: 13px;
+}
+
+.country-risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: calc(100vh - 230px);
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.country-risk-list button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink);
+  text-align: left;
+}
+
+.country-risk-list button:hover,
+.country-risk-list button.active {
+  border-color: rgba(0, 102, 204, 0.2);
+  background: var(--color-auto-fill);
+}
+
+.country-risk-list span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.country-risk-list strong,
+.region-risk-row strong {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.country-risk-list small,
+.region-risk-row span {
+  color: var(--color-ink-muted-48);
+  font-size: 11px;
+}
+
+.country-risk-list b {
+  color: var(--color-primary);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.country-risk-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.country-risk-data-card h2 {
+  font-size: 17px;
+  margin-bottom: var(--space-sm);
+}
+
+.country-risk-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 7px;
+}
+
+.region-risk-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.region-risk-row {
+  position: relative;
+  min-height: 42px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas-parchment);
+  overflow: hidden;
+}
+
+.region-risk-row div {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.region-risk-row i {
+  position: absolute;
+  inset: auto auto 0 0;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+}
+
+@media (max-width: 834px) {
+  .country-risk-hero,
+  .country-risk-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .country-risk-sidebar {
+    position: relative;
+    top: auto;
+    max-height: none;
+  }
+
+  .country-risk-list {
+    max-height: 360px;
+  }
+}
+
+@media (max-width: 640px) {
+  .country-risk-page {
+    padding: var(--space-sm) 0 110px;
+  }
+
+  .country-risk-meta {
+    grid-template-columns: 1fr;
+  }
+}

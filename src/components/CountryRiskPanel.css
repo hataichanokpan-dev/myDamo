@@ -1,0 +1,115 @@
+.country-risk-panel {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  border: 1px solid rgba(0, 102, 204, 0.18);
+  border-radius: var(--radius-md);
+  background: var(--color-canvas);
+}
+
+.country-risk-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.country-risk-panel__head span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.country-risk-panel__head small {
+  color: var(--color-ink-muted-48);
+  font-size: 11px;
+}
+
+.country-risk-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: var(--space-xs);
+}
+
+.country-risk-panel__body strong {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.country-risk-panel__body span {
+  color: var(--color-ink-muted-48);
+  font-size: 12px;
+}
+
+.country-risk-panel__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: var(--space-xs);
+}
+
+.country-risk-panel__metrics span {
+  min-width: 0;
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas-parchment);
+  color: var(--color-ink-muted-48);
+  font-size: 11px;
+}
+
+.country-risk-panel__metrics b {
+  display: block;
+  color: var(--color-ink);
+  font-size: 14px;
+}
+
+.country-risk-panel__exposures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: var(--space-xs);
+}
+
+.country-risk-panel__exposures span {
+  padding: 4px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 102, 204, 0.08);
+  color: var(--color-ink-muted-80);
+  font-size: 11px;
+}
+
+.country-risk-panel__exposures b {
+  color: var(--color-primary);
+}
+
+.country-risk-panel p {
+  margin-top: var(--space-xs);
+  color: var(--color-ink-muted-48);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.country-risk-panel__btn {
+  margin-top: var(--space-xs);
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.country-risk-panel--compact {
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .country-risk-panel__metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}

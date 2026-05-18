@@ -1,10 +1,12 @@
 import { useState, useCallback } from 'react'
 import type { YahooFinanceData } from '../hooks/useYahooFinance'
+import type { CountryRiskRecord } from '../data/countryRiskLatest'
 import type { HighGrowthInputs } from '../engines/highGrowthValuation'
 import { computeHighGrowthValuation } from '../engines/highGrowthValuation'
 import TickerSearch from '../components/TickerSearch'
 import FormField from '../components/FormField'
 import ProjectionChart from '../components/ProjectionChart'
+import CountryRiskPanel from '../components/CountryRiskPanel'
 import { fmtNumber, fmtPercent, fmtCompact } from '../utils/format'
 import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
@@ -32,6 +34,7 @@ const DEFAULT: HighGrowthInputs = {
 
 export default function HighGrowthValuation() {
   const [inputs, setInputs] = useState<HighGrowthInputs>(DEFAULT)
+  const [selectedCountryRisk, setSelectedCountryRisk] = useState<CountryRiskRecord | null>(null)
   const [result, setResult] = useState<ReturnType<typeof computeHighGrowthValuation> | null>(null)
   const resultRef = useAutoScrollResult(result)
 
@@ -50,6 +53,15 @@ export default function HighGrowthValuation() {
     }))
   }, [])
 
+  const handleCountryRiskApply = useCallback((risk: CountryRiskRecord) => {
+    setSelectedCountryRisk(risk)
+    setInputs(prev => ({
+      ...prev,
+      marketRiskPremium: risk.totalEquityRiskPremium,
+      marginalTaxRate: risk.taxRate ?? prev.marginalTaxRate,
+    }))
+  }, [])
+
   const update = (key: keyof HighGrowthInputs, value: any) => setInputs(prev => ({ ...prev, [key]: value }))
 
   return (
@@ -57,7 +69,7 @@ export default function HighGrowthValuation() {
       <h1>High Growth Valuation</h1>
       <p className="page-desc">For companies with negative earnings or high growth. 10-year DCF with NOL carryforward and per-year growth rates.</p>
       <p className="page-desc-thai">สำหรับบริษัทที่ขาดทุนหรือเติบโตสูง — โมเดล DCF 10 ปี พร้อม NOL และอัตราเติบโตรายปี</p>
-      <TickerSearch onData={handleAutoFill} />
+      <TickerSearch onData={handleAutoFill} onCountryRiskApply={handleCountryRiskApply} />
       <div className="calc-grid">
         <div className="calc-inputs">
           <h2>Current Financials <span className="thai-sub">ข้อมูลการเงินปัจจุบัน</span></h2>
@@ -72,6 +84,12 @@ export default function HighGrowthValuation() {
             <FormField label="Shares" hint="จำนวนหุ้นที่ชำระแล้ว" source="auto" value={inputs.sharesOutstanding} onChange={v => update('sharesOutstanding', v)} />
             <FormField label="Stock Price" hint="ราคาหุ้นปัจจุบัน" source="auto" value={inputs.currentStockPrice} onChange={v => update('currentStockPrice', v)} step={0.01} />
           </div>
+          <CountryRiskPanel
+            risk={selectedCountryRisk}
+            applied={!!selectedCountryRisk}
+            compact
+            note="Country ERP and tax rate were applied to the high-growth assumptions."
+          />
           <h2>Growth Assumptions <span className="thai-sub">สมมติฐานการเติบโต</span></h2>
           <div className="input-section">
             <FormField label="Enter growth per year" hint="ระบุอัตราเติบโตทีละปี" source="user" type="checkbox" value={inputs.enterGrowthPerYear ? 1 : 0} onChange={v => update('enterGrowthPerYear', v === 1)} checked={inputs.enterGrowthPerYear} />
