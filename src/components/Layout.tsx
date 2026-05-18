@@ -84,6 +84,19 @@ export default function Layout() {
         <Outlet />
       </main>
 
+      <nav className="mobile-tabbar" aria-label="Primary mobile navigation">
+        {NAV_ITEMS.slice(0, 5).map(item => (
+          <Link key={item.path} to={item.path} className={`tabbar-link ${pathname === item.path ? 'active' : ''}`}>
+            <Icon name={item.icon as any} size="sm" />
+            <span>{item.label}</span>
+          </Link>
+        ))}
+        <button className="tabbar-link tabbar-more" type="button" onClick={() => setDrawerOpen(true)}>
+          <Icon name="grid" size="sm" />
+          <span>More</span>
+        </button>
+      </nav>
+
       <footer className="footer">
         <div className="container footer-inner">
           <p>Based on Aswath Damodaran's valuation spreadsheets. For educational purposes only.</p>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { RdInputs } from '../engines/leaseConverter'
 import { computeRdConversion } from '../engines/leaseConverter'
 import { fmtCompact } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 export default function RdConverter() {
@@ -18,6 +19,7 @@ export default function RdConverter() {
     taxRate: 0.25,
   })
   const [result, setResult] = useState<ReturnType<typeof computeRdConversion> | null>(null)
+  const resultRef = useAutoScrollResult(result)
 
   const update = (key: keyof RdInputs, value: any) => setInputs(prev => ({ ...prev, [key]: value }))
   const updateHistorical = (idx: number, value: number) => {
@@ -52,7 +54,7 @@ export default function RdConverter() {
           <button onClick={() => setResult(computeRdConversion(inputs))} className="btn-primary calc-btn">Convert R&D <span className="thai-sub">แปลง R&D</span></button>
         </div>
         {result && (
-          <div className="calc-results">
+          <div className="calc-results" ref={resultRef}>
             <h2>R&D Conversion Result <span className="thai-sub">ผลการแปลง R&D</span></h2>
             <div className="result-summary">
               <div className="result-card"><span className="result-label">Unamortized R&D Asset <span className="thai-sub">สินทรัพย์ R&D ที่ยังไม่หมดอายุ</span></span><span className="result-number">{fmtCompact(result.totalUnamortizedRd)}</span></div>

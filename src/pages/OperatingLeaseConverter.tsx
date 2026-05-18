@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { LeaseInputs } from '../engines/leaseConverter'
 import { computeLeaseConversion } from '../engines/leaseConverter'
 import { fmtCompact } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 export default function OperatingLeaseConverter() {
@@ -11,6 +12,7 @@ export default function OperatingLeaseConverter() {
     preTaxCostOfDebt: 0.035,
   })
   const [result, setResult] = useState<ReturnType<typeof computeLeaseConversion> | null>(null)
+  const resultRef = useAutoScrollResult(result)
 
   const updateCommitment = (idx: number, value: number) => {
     const newComm = [...inputs.leaseCommitments]
@@ -41,7 +43,7 @@ export default function OperatingLeaseConverter() {
           <button onClick={() => setResult(computeLeaseConversion(inputs))} className="btn-primary calc-btn">Convert Leases <span className="thai-sub">แปลงสัญญาเช่า</span></button>
         </div>
         {result && (
-          <div className="calc-results">
+          <div className="calc-results" ref={resultRef}>
             <h2>Lease Conversion Result <span className="thai-sub">ผลการแปลงสัญญาเช่า</span></h2>
             <div className="result-summary">
               <div className="result-card"><span className="result-label">Debt Value of Leases <span className="thai-sub">มูลค่าหนี้ของสัญญาเช่า</span></span><span className="result-number">{fmtCompact(result.debtValueOfLeases)}</span></div>

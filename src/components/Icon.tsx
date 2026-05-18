@@ -24,6 +24,11 @@ const PATHS: Record<string, string> = {
   beaker: 'M4.5 3h15M9 3v4.2c0 .6-.2 1.2-.6 1.6L5.5 13h13l-2.9-4.2c-.4-.4-.6-1-.6-1.6V3',
   fileText: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8',
   percent: 'M19 5L5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z',
+  grid: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',
+  activity: 'M22 12h-4l-3 8L9 4l-3 8H2',
+  sparkle: 'M12 3l1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9L12 3zM5 17l.8 2.2L8 20l-2.2.8L5 23l-.8-2.2L2 20l2.2-.8L5 17z',
+  wallet: 'M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14M16 12h5',
+  sliders: 'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4',
 }
 
 interface Props {

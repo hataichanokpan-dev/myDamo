@@ -4,7 +4,9 @@ import type { FcffSimpleInputs } from '../engines/fcffSimpleDcf'
 import { computeFcffSimpleDcf } from '../engines/fcffSimpleDcf'
 import TickerSearch from '../components/TickerSearch'
 import FormField from '../components/FormField'
+import ProjectionChart from '../components/ProjectionChart'
 import { fmtNumber, fmtPercent, fmtCompact } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 const DEFAULT_INPUTS: FcffSimpleInputs = {
@@ -36,6 +38,7 @@ const DEFAULT_INPUTS: FcffSimpleInputs = {
 export default function FcffSimpleDcf() {
   const [inputs, setInputs] = useState<FcffSimpleInputs>(DEFAULT_INPUTS)
   const [result, setResult] = useState<ReturnType<typeof computeFcffSimpleDcf> | null>(null)
+  const resultRef = useAutoScrollResult(result)
 
   const handleAutoFill = useCallback((data: YahooFinanceData) => {
     setInputs(prev => ({
@@ -114,7 +117,7 @@ export default function FcffSimpleDcf() {
           </div>
 
           {result && (
-            <div className="calc-results">
+            <div className="calc-results" ref={resultRef}>
               <h2>Valuation Result <span className="thai-sub">ผลการประเมินมูลค่า</span></h2>
               <div className="result-summary">
                 <div className="result-card result-card-main">
@@ -142,6 +145,8 @@ export default function FcffSimpleDcf() {
                   <span className="result-number">{fmtCompact(result.valueOfEquity)}</span>
                 </div>
               </div>
+
+              <ProjectionChart data={result.years} title="10-Year Operating Forecast" />
 
               <h3>Diagnostics <span className="thai-sub">การวิเคราะห์เชิงลึก</span></h3>
               <div className="diagnostics">

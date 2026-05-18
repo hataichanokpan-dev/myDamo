@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { NormalizedEarningsInputs } from '../engines/leaseConverter'
 import { computeNormalizedEarnings } from '../engines/leaseConverter'
 import { fmtCompact } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 export default function NormalizedEarnings() {
@@ -10,6 +11,7 @@ export default function NormalizedEarnings() {
     historicalAverageEbit: 2000, historicalAverageRoc: 0.15, sectorMargin: 0.12,
   })
   const [result, setResult] = useState<ReturnType<typeof computeNormalizedEarnings> | null>(null)
+  const resultRef = useAutoScrollResult(result)
   const update = (key: keyof NormalizedEarningsInputs, value: any) => setInputs(prev => ({ ...prev, [key]: value }))
 
   return (
@@ -41,7 +43,7 @@ export default function NormalizedEarnings() {
           <button onClick={() => setResult(computeNormalizedEarnings(inputs))} className="btn-primary calc-btn">Normalize Earnings <span className="thai-sub">ปรับกำไรปกติ</span></button>
         </div>
         {result && (
-          <div className="calc-results">
+          <div className="calc-results" ref={resultRef}>
             <h2>Normalized Earnings <span className="thai-sub">กำไรปกติ</span></h2>
             <div className="result-summary">
               <div className="result-card result-card-main">

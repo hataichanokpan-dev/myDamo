@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { computeImpliedRoc } from '../engines/leaseConverter'
 import { fmtPercent } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 export default function ImpliedRocRoe() {
@@ -9,6 +10,7 @@ export default function ImpliedRocRoe() {
   const [growthRate, setGrowthRate] = useState(0.04)
   const [costOfCapital, setCostOfCapital] = useState(0.0935)
   const [result, setResult] = useState<ReturnType<typeof computeImpliedRoc> | null>(null)
+  const resultRef = useAutoScrollResult(result)
 
   const compute = () => setResult(computeImpliedRoc(ebitAfterTax, fcff, growthRate, costOfCapital))
 
@@ -33,7 +35,7 @@ export default function ImpliedRocRoe() {
           <button onClick={compute} className="btn-primary calc-btn">Calculate <span className="thai-sub">คำนวณ</span></button>
         </div>
         {result && (
-          <div className="calc-results">
+          <div className="calc-results" ref={resultRef}>
             <h2>Result <span className="thai-sub">ผลลัพธ์</span></h2>
             <div className="result-summary">
               <div className="result-card result-card-main">

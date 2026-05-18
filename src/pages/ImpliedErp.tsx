@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { computeImpliedErp } from '../engines/leaseConverter'
 import { fmtCompact, fmtPercent, fmtNumber } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 export default function ImpliedErp() {
@@ -10,6 +11,7 @@ export default function ImpliedErp() {
   const [riskFreeRate, setRiskFreeRate] = useState(0.04)
   const [longTermGrowth, setLongTermGrowth] = useState(0.04)
   const [result, setResult] = useState<ReturnType<typeof computeImpliedErp> | null>(null)
+  const resultRef = useAutoScrollResult(result)
 
   const compute = () => setResult(computeImpliedErp(indexLevel, divYield, growth5yr, riskFreeRate, longTermGrowth))
 
@@ -36,7 +38,7 @@ export default function ImpliedErp() {
           <button onClick={compute} className="btn-primary calc-btn">Calculate ERP <span className="thai-sub">คำนวณ ERP</span></button>
         </div>
         {result && (
-          <div className="calc-results">
+          <div className="calc-results" ref={resultRef}>
             <h2>Implied ERP <span className="thai-sub">ค่า ERP ที่คำนวณได้</span></h2>
             <div className="result-summary">
               <div className="result-card result-card-main">

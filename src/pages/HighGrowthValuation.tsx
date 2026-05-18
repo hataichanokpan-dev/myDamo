@@ -4,7 +4,9 @@ import type { HighGrowthInputs } from '../engines/highGrowthValuation'
 import { computeHighGrowthValuation } from '../engines/highGrowthValuation'
 import TickerSearch from '../components/TickerSearch'
 import FormField from '../components/FormField'
+import ProjectionChart from '../components/ProjectionChart'
 import { fmtNumber, fmtPercent, fmtCompact } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 const DEFAULT: HighGrowthInputs = {
@@ -31,6 +33,7 @@ const DEFAULT: HighGrowthInputs = {
 export default function HighGrowthValuation() {
   const [inputs, setInputs] = useState<HighGrowthInputs>(DEFAULT)
   const [result, setResult] = useState<ReturnType<typeof computeHighGrowthValuation> | null>(null)
+  const resultRef = useAutoScrollResult(result)
 
   const handleAutoFill = useCallback((data: YahooFinanceData) => {
     setInputs(prev => ({
@@ -97,7 +100,7 @@ export default function HighGrowthValuation() {
           <button onClick={() => setResult(computeHighGrowthValuation(inputs))} className="btn-primary calc-btn">Calculate Valuation <span className="thai-sub">คำนวณมูลค่า</span></button>
         </div>
         {result && (
-          <div className="calc-results">
+          <div className="calc-results" ref={resultRef}>
             <h2>Valuation Result <span className="thai-sub">ผลการประเมินมูลค่า</span></h2>
             <div className="result-summary">
               <div className="result-card result-card-main">
@@ -109,6 +112,7 @@ export default function HighGrowthValuation() {
               <div className="result-card"><span className="result-label">PV of Terminal Value <span className="thai-sub">มูลค่าปัจจุบันมูลค่าตัวท้าย</span></span><span className="result-number">{fmtCompact(result.pvTerminalValue)}</span></div>
               <div className="result-card"><span className="result-label">Operating Asset Value <span className="thai-sub">มูลค่าสินทรัพย์ดำเนินงาน</span></span><span className="result-number">{fmtCompact(result.valueOfOperatingAssets)}</span></div>
             </div>
+            <ProjectionChart data={result.years} title="High-Growth Fade Forecast" />
             <h3>10-Year Projection <span className="thai-sub">โปรเจคชัน 10 ปี</span></h3>
             <div className="table-scroll">
               <table>

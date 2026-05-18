@@ -5,6 +5,7 @@ import { computeWacc } from '../engines/waccCalculator'
 import TickerSearch from '../components/TickerSearch'
 import FormField from '../components/FormField'
 import { fmtPercent, fmtCompact } from '../utils/format'
+import useAutoScrollResult from '../hooks/useAutoScrollResult'
 import './CalculatorPage.css'
 
 const DEFAULT: WaccInputs = {
@@ -31,6 +32,7 @@ const BETA_OPTIONS = [
 export default function WaccCalculator() {
   const [inputs, setInputs] = useState<WaccInputs>(DEFAULT)
   const [result, setResult] = useState<ReturnType<typeof computeWacc> | null>(null)
+  const resultRef = useAutoScrollResult(result)
 
   const handleAutoFill = useCallback((data: YahooFinanceData) => {
     setInputs(prev => ({
@@ -85,7 +87,7 @@ export default function WaccCalculator() {
           <button onClick={() => setResult(computeWacc(inputs))} className="btn-primary calc-btn">Calculate WACC <span className="thai-sub">คำนวณ WACC</span></button>
         </div>
         {result && (
-          <div className="calc-results">
+          <div className="calc-results" ref={resultRef}>
             <h2>WACC Result <span className="thai-sub">ผลการคำนวณ WACC</span></h2>
             <div className="result-summary">
               <div className="result-card result-card-main">
