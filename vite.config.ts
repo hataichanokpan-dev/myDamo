@@ -1,18 +1,8 @@
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
-import { execSync } from 'node:child_process'
 
-const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-
-function curlPage(url: string): string {
-  try {
-    return execSync(
-      `curl -s --compressed -H "User-Agent: ${UA}" -H "Accept: text/html" "${url}"`,
-      { maxBuffer: 10 * 1024 * 1024, encoding: 'utf8', timeout: 15000 }
-    )
-  } catch { return '' }
-}
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
 
 function raw(obj: any, key: string): number {
   const v = obj?.[key]
@@ -35,12 +25,28 @@ function extractQuoteSummary(html: string) {
   return null
 }
 
-async function fetchStockData(ticker: string) {
-  const chartPromise = fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`, { headers: { 'User-Agent': UA } })
-    .then(r => r.ok ? r.json() : null).catch(() => null)
-  const pagePromise = Promise.resolve(curlPage(`https://finance.yahoo.com/quote/${encodeURIComponent(ticker)}/`))
+async function fetchPage(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': UA,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+      },
+      signal: AbortSignal.timeout(15000),
+    })
+    return res.ok ? await res.text() : ''
+  } catch { return '' }
+}
 
-  const [chartData, html] = await Promise.all([chartPromise, pagePromise])
+async function fetchStockData(ticker: string) {
+  const [chartData, html] = await Promise.all([
+    fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`, {
+      headers: { 'User-Agent': UA },
+      signal: AbortSignal.timeout(10000),
+    }).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetchPage(`https://finance.yahoo.com/quote/${encodeURIComponent(ticker)}/`),
+  ])
 
   let meta: any = {}
   if (chartData) {

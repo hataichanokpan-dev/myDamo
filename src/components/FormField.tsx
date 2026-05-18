@@ -1,5 +1,4 @@
 import { type ChangeEvent, type CSSProperties } from 'react'
-import Icon from './Icon'
 import './FormField.css'
 
 export interface FormFieldProps {
@@ -15,12 +14,10 @@ export interface FormFieldProps {
   style?: CSSProperties
 }
 
-type IconName = 'lock' | ''
-
-const SOURCE_META: Record<string, { badge: string; tooltip: string; className: string; iconName: IconName }> = {
-  auto: { badge: 'Auto', tooltip: 'From Yahoo Finance', className: 'ff--auto', iconName: 'lock' },
-  user: { badge: '', tooltip: 'Your assumption', className: 'ff--user', iconName: '' },
-  default: { badge: 'Default', tooltip: 'Damodaran default', className: 'ff--default', iconName: '' },
+const SOURCE_META: Record<string, { badge: string; tooltip: string; className: string }> = {
+  auto: { badge: 'Auto', tooltip: 'From Yahoo Finance', className: 'ff--auto' },
+  user: { badge: '', tooltip: 'Your assumption', className: 'ff--user' },
+  default: { badge: 'Default', tooltip: 'Damodaran default', className: 'ff--default' },
 }
 
 export default function FormField({
@@ -51,7 +48,6 @@ export default function FormField({
         <span className="ff-label-text">{label}</span>
         {meta.badge && (
           <span className={`ff-badge ff-badge--${source}`}>
-            {meta.iconName && <Icon name={meta.iconName} size="sm" />}
             {meta.badge}
           </span>
         )}
@@ -80,7 +76,6 @@ export default function FormField({
           value={value}
           step={step ?? 'any'}
           onChange={handleChange}
-          readOnly={source === 'auto'}
         />
       )}
     </div>

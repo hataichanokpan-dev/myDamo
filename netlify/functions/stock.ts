@@ -1,16 +1,4 @@
-import { execSync } from 'node:child_process'
-
-const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-const HEADERS = { 'User-Agent': UA }
-
-function curlPage(url: string): string {
-  try {
-    return execSync(
-      `curl -s --compressed -H "User-Agent: ${UA}" -H "Accept: text/html" "${url}"`,
-      { maxBuffer: 10 * 1024 * 1024, encoding: 'utf8', timeout: 15000 }
-    )
-  } catch { return '' }
-}
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
 
 function raw(obj: any, key: string): number {
   const v = obj?.[key]
@@ -33,6 +21,20 @@ function extractQuoteSummary(html: string) {
   return null
 }
 
+async function fetchPage(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': UA,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+      },
+      signal: AbortSignal.timeout(15000),
+    })
+    return res.ok ? await res.text() : ''
+  } catch { return '' }
+}
+
 export default async (req: Request): Promise<Response> => {
   const url = new URL(req.url)
   const ticker = url.searchParams.get('ticker')
@@ -42,12 +44,15 @@ export default async (req: Request): Promise<Response> => {
 
   try {
     const [chartRes, html] = await Promise.all([
-      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`, { headers: HEADERS }),
-      Promise.resolve(curlPage(`https://finance.yahoo.com/quote/${encodeURIComponent(ticker)}/`)),
+      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`, {
+        headers: { 'User-Agent': UA },
+        signal: AbortSignal.timeout(10000),
+      }).catch(() => null),
+      fetchPage(`https://finance.yahoo.com/quote/${encodeURIComponent(ticker)}/`),
     ])
 
     let meta: any = {}
-    if (chartRes.ok) {
+    if (chartRes?.ok) {
       try {
         const chartData = await chartRes.json()
         meta = chartData?.chart?.result?.[0]?.meta || {}
