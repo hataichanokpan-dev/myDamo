@@ -10,10 +10,10 @@ interface Answers {
 }
 
 const RECOMMENDATIONS: Record<string, { model: string; path: string; reason: string; reasonThai: string }> = {
-  'dividend-y-stable-y': { model: 'Dividend Discount Model', path: '/fcff-simple', reason: 'Stable dividends and cash flows. Use DDM if dividend policy is consistent and predictable.', reasonThai: 'ปันผลและกระแสเงินสดคงที่ — ใช้ DDM ได้หากนโยบายปันผลสม่ำเสมอ' },
+  'dividend-y-stable-y': { model: 'Dividend Discount Model', path: '/ddm', reason: 'Stable dividends and cash flows. Use DDM if dividend policy is consistent and predictable.', reasonThai: 'ปันผลและกระแสเงินสดคงที่ — ใช้ DDM ได้หากนโยบายปันผลสม่ำเสมอ' },
   'dividend-y-stable-n': { model: 'FCFF DCF', path: '/fcff-simple', reason: 'Dividends exist but cash flows are volatile. FCFF captures the true cash generation better.', reasonThai: 'มีปันผลแต่กระแสเงินสดผันผวน — FCFF จับภาพเงินสดจริงได้ดีกว่า' },
   'dividend-n-leverage-high': { model: 'FCFF DCF', path: '/fcff-simple', reason: 'No dividends and high leverage. FCFF is preferred because it values the firm before debt payments.', reasonThai: 'ไม่มีปันผลและมีหนี้สินสูง — FCFF เหมาะเพราะประเมินมูลค่าก่อนหักหนี้' },
-  'dividend-n-leverage-low': { model: 'FCFE Model', path: '/fcff-simple', reason: 'No dividends but low leverage. FCFE gives equity value directly. Use FCFF as alternative.', reasonThai: 'ไม่มีปันผลแต่หนี้ต่ำ — FCFE ให้มูลค่าหุ้นโดยตรง' },
+  'dividend-n-leverage-low': { model: 'FCFE Model', path: '/fcfe', reason: 'No dividends but low leverage. FCFE gives equity value directly. Use FCFF as alternative.', reasonThai: 'ไม่มีปันผลแต่หนี้ต่ำ — FCFE ให้มูลค่าหุ้นโดยตรง' },
   'dividend-n-negative': { model: 'High Growth Valuation', path: '/high-growth', reason: 'Negative or very low earnings. Use the high growth model which handles NOL and margin convergence.', reasonThai: 'กำไรติดลบหรือต่ำมาก — ใช้โมเดลเติบโตสูงที่รองรับ NOL และอัตรากำไรลู่เข้า' },
 }
 

@@ -3,9 +3,12 @@ import Icon from '../components/Icon'
 import './Home.css'
 
 const MODELS = [
+  { path: '/workspace', title: 'Valuation Case Workspace', desc: 'One case for story, WACC, DCF, country risk, audit checks, sensitivity, and export.', thai: 'รวม narrative, WACC, DCF, country risk, audit และ sensitivity ไว้ในเคสเดียว', tag: 'Workspace', icon: 'wallet' },
   { path: '/fcff-simple', title: 'FCFF Simple DCF', desc: '10-year FCFF model with growth, margin convergence, and terminal value.', thai: 'โมเดล FCFF 10 ปี พร้อมการเติบโตและมูลค่าตัวท้าย', tag: 'Most Used', icon: 'chart' },
   { path: '/fcff-full', title: 'FCFF Full DCF', desc: 'Advanced model with R&D, lease, normalized earnings, and beta adjustment.', thai: 'โมเดลขั้นสูง พร้อมปรับ R&D สัญญาเช่า และกำไรปกติ', tag: 'Advanced', icon: 'layers' },
   { path: '/high-growth', title: 'High Growth Valuation', desc: 'For negative earnings or high growth with NOL and yearly growth rates.', thai: 'สำหรับบริษัทขาดทุนหรือโตสูง รองรับ NOL รายปี', tag: 'Growth', icon: 'rocket' },
+  { path: '/fcfe', title: 'FCFE Valuation', desc: 'Equity cash flow model for low-leverage companies and direct equity valuation.', thai: 'ประเมินจากกระแสเงินสดถึงผู้ถือหุ้นโดยตรง เหมาะกับหนี้ต่ำ', tag: 'Equity', icon: 'wallet' },
+  { path: '/ddm', title: 'Dividend Discount Model', desc: 'Two-stage dividend model for mature dividend-paying companies.', thai: 'โมเดลปันผลสองช่วง สำหรับบริษัทที่จ่ายปันผลสม่ำเสมอ', tag: 'Dividend', icon: 'percent' },
   { path: '/wacc', title: 'WACC Calculator', desc: 'Cost of capital with beta, ERP, cost of debt, and lease adjustments.', thai: 'คำนวณ WACC พร้อม Beta, ERP และต้นทุนหนี้', tag: 'Essential', icon: 'gauge' },
   { path: '/country-risk', title: 'Country Risk Premiums', desc: 'Search Damodaran country ERP, CRP, tax rates, ratings, and regional risk.', thai: 'ค้นหา ERP, CRP, ภาษี และ rating รายประเทศจาก Damodaran', tag: 'Dataset', icon: 'shield' },
   { path: '/model-selector', title: 'Model Selector', desc: 'Answer a few questions to choose the right valuation approach.', thai: 'ตอบคำถามเพื่อเลือกโมเดลประเมินมูลค่าที่เหมาะสม', tag: 'Guide', icon: 'compass' },

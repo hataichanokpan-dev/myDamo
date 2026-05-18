@@ -9,6 +9,7 @@ import ProjectionChart from '../components/ProjectionChart'
 import CountryRiskPanel from '../components/CountryRiskPanel'
 import { fmtNumber, fmtPercent, fmtCompact } from '../utils/format'
 import useAutoScrollResult from '../hooks/useAutoScrollResult'
+import { useValuationCase } from '../context/ValuationCaseContext'
 import './CalculatorPage.css'
 
 const DEFAULT_INPUTS: FcffSimpleInputs = {
@@ -41,6 +42,7 @@ export default function FcffSimpleDcf() {
   const [inputs, setInputs] = useState<FcffSimpleInputs>(DEFAULT_INPUTS)
   const [selectedCountryRisk, setSelectedCountryRisk] = useState<CountryRiskRecord | null>(null)
   const [result, setResult] = useState<ReturnType<typeof computeFcffSimpleDcf> | null>(null)
+  const { updateCase } = useValuationCase()
   const resultRef = useAutoScrollResult(result)
 
   const handleAutoFill = useCallback((data: YahooFinanceData) => {
@@ -56,7 +58,19 @@ export default function FcffSimpleDcf() {
       currentStockPrice: data.price || 0,
       effectiveTaxRate: data.effectiveTaxRate || 0.15,
     }))
-  }, [])
+    updateCase((current) => ({
+      ...current,
+      company: {
+        ticker: data.symbol,
+        name: data.longName || data.shortName,
+        country: data.country,
+        currency: data.currency,
+        sector: data.sector,
+        industry: data.industry,
+        price: data.price,
+      },
+    }))
+  }, [updateCase])
 
   const handleCountryRiskApply = useCallback((risk: CountryRiskRecord) => {
     setSelectedCountryRisk(risk)
@@ -72,7 +86,12 @@ export default function FcffSimpleDcf() {
   }
 
   const compute = () => {
-    setResult(computeFcffSimpleDcf(inputs))
+    const next = computeFcffSimpleDcf(inputs)
+    setResult(next)
+    updateCase((current) => ({
+      ...current,
+      dcf: { result: next, inputs },
+    }))
   }
 
   return (

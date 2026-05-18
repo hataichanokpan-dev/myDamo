@@ -218,7 +218,8 @@ export function computeFcffSimpleDcf(inputs: FcffSimpleInputs): DcfResult {
   }
 
   // Terminal Value
-  const terminalValue = terminalFcff / (terminalCostOfCapital - terminalGrowthRate)
+  const terminalSpread = terminalCostOfCapital - terminalGrowthRate
+  const terminalValue = terminalSpread > 0 ? terminalFcff / terminalSpread : 0
   const pvTerminalValue = terminalValue / cumulatedWacc
 
   // PV of cash flows

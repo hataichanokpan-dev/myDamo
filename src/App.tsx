@@ -12,6 +12,9 @@ import RdConverter from './pages/RdConverter'
 import OperatingLeaseConverter from './pages/OperatingLeaseConverter'
 import NormalizedEarnings from './pages/NormalizedEarnings'
 import CountryRisk from './pages/CountryRisk'
+import ValuationWorkspace from './pages/ValuationWorkspace'
+import DividendDiscountModel from './pages/DividendDiscountModel'
+import FcfeValuation from './pages/FcfeValuation'
 
 export default function App() {
   return (
@@ -29,6 +32,9 @@ export default function App() {
         <Route path="operating-lease" element={<OperatingLeaseConverter />} />
         <Route path="normalized-earnings" element={<NormalizedEarnings />} />
         <Route path="country-risk" element={<CountryRisk />} />
+        <Route path="workspace" element={<ValuationWorkspace />} />
+        <Route path="ddm" element={<DividendDiscountModel />} />
+        <Route path="fcfe" element={<FcfeValuation />} />
       </Route>
     </Routes>
   )

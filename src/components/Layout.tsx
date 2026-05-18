@@ -5,9 +5,12 @@ import './Layout.css'
 
 const NAV_ITEMS = [
   { path: '/', label: 'Home', icon: 'home' },
+  { path: '/workspace', label: 'Workspace', icon: 'wallet' },
   { path: '/fcff-simple', label: 'DCF Simple', icon: 'chart' },
   { path: '/fcff-full', label: 'DCF Full', icon: 'layers' },
   { path: '/high-growth', label: 'High Growth', icon: 'rocket' },
+  { path: '/fcfe', label: 'FCFE', icon: 'wallet' },
+  { path: '/ddm', label: 'DDM', icon: 'percent' },
   { path: '/wacc', label: 'WACC', icon: 'gauge' },
   { path: '/country-risk', label: 'Country Risk', icon: 'shield' },
   { path: '/model-selector', label: 'Model Pick', icon: 'compass' },

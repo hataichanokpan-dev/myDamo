@@ -14,6 +14,7 @@ import Icon from '../components/Icon'
 import FormField from '../components/FormField'
 import { fmtPercent, fmtCompact } from '../utils/format'
 import useAutoScrollResult from '../hooks/useAutoScrollResult'
+import { useValuationCase } from '../context/ValuationCaseContext'
 import './CalculatorPage.css'
 
 const DEFAULT: WaccInputs = {
@@ -44,6 +45,7 @@ export default function WaccCalculator() {
   const [countryExposures, setCountryExposures] = useState<CountryExposure[]>([{ country: 'United States', weight: 100 }])
   const [countryRiskApplied, setCountryRiskApplied] = useState(false)
   const [result, setResult] = useState<ReturnType<typeof computeWacc> | null>(null)
+  const { updateCase } = useValuationCase()
   const resultRef = useAutoScrollResult(result)
   const weightedRisk = calculateWeightedCountryRisk(countryExposures)
   const erpDelta = Math.abs(inputs.directErp - weightedRisk.totalEquityRiskPremium)
@@ -78,7 +80,19 @@ export default function WaccCalculator() {
       unleveredBeta: data.beta || 1,
       regressionBeta: data.beta || 1,
     }))
-  }, [])
+    updateCase((current) => ({
+      ...current,
+      company: {
+        ticker: data.symbol,
+        name: data.longName || data.shortName,
+        country: data.country,
+        currency: data.currency,
+        sector: data.sector,
+        industry: data.industry,
+        price: data.price,
+      },
+    }))
+  }, [updateCase])
 
   const handleCountryRiskApply = useCallback((risk: CountryRiskRecord) => {
     const exposures = [{ country: risk.country, weight: 100 }]
@@ -98,6 +112,17 @@ export default function WaccCalculator() {
   const removeExposure = (index: number) => {
     setCountryExposures(prev => prev.filter((_, i) => i !== index))
     setCountryRiskApplied(false)
+  }
+  const computeAndSave = () => {
+    const next = computeWacc(inputs)
+    const countryRisk = calculateWeightedCountryRisk(countryExposures)
+    setResult(next)
+    updateCase((current) => ({
+      ...current,
+      countryExposures,
+      countryRisk,
+      wacc: { result: next, inputs },
+    }))
   }
 
   return (
@@ -179,7 +204,7 @@ export default function WaccCalculator() {
           <div className="input-section">
             <FormField label="Tax Rate" hint="อัตราภาษี" source="user" value={inputs.taxRate} onChange={v => update('taxRate', v)} step={0.01} />
           </div>
-          <button onClick={() => setResult(computeWacc(inputs))} className="btn-primary calc-btn">Calculate WACC <span className="thai-sub">คำนวณ WACC</span></button>
+          <button onClick={computeAndSave} className="btn-primary calc-btn">Calculate WACC <span className="thai-sub">คำนวณ WACC</span></button>
         </div>
         {result && (
           <div className="calc-results" ref={resultRef}>

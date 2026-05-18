@@ -9,6 +9,7 @@ import ProjectionChart from '../components/ProjectionChart'
 import CountryRiskPanel from '../components/CountryRiskPanel'
 import { fmtNumber, fmtPercent, fmtCompact } from '../utils/format'
 import useAutoScrollResult from '../hooks/useAutoScrollResult'
+import { useValuationCase } from '../context/ValuationCaseContext'
 import './CalculatorPage.css'
 
 const DEFAULT: HighGrowthInputs = {
@@ -36,6 +37,7 @@ export default function HighGrowthValuation() {
   const [inputs, setInputs] = useState<HighGrowthInputs>(DEFAULT)
   const [selectedCountryRisk, setSelectedCountryRisk] = useState<CountryRiskRecord | null>(null)
   const [result, setResult] = useState<ReturnType<typeof computeHighGrowthValuation> | null>(null)
+  const { updateCase } = useValuationCase()
   const resultRef = useAutoScrollResult(result)
 
   const handleAutoFill = useCallback((data: YahooFinanceData) => {
@@ -51,7 +53,19 @@ export default function HighGrowthValuation() {
       currentStockPrice: data.price || 0,
       currentBeta: data.beta || 1.2,
     }))
-  }, [])
+    updateCase((current) => ({
+      ...current,
+      company: {
+        ticker: data.symbol,
+        name: data.longName || data.shortName,
+        country: data.country,
+        currency: data.currency,
+        sector: data.sector,
+        industry: data.industry,
+        price: data.price,
+      },
+    }))
+  }, [updateCase])
 
   const handleCountryRiskApply = useCallback((risk: CountryRiskRecord) => {
     setSelectedCountryRisk(risk)
@@ -63,6 +77,66 @@ export default function HighGrowthValuation() {
   }, [])
 
   const update = (key: keyof HighGrowthInputs, value: any) => setInputs(prev => ({ ...prev, [key]: value }))
+  const computeAndSave = () => {
+    const next = computeHighGrowthValuation(inputs)
+    setResult(next)
+    updateCase((current) => ({
+      ...current,
+      dcf: {
+        result: {
+          years: next.years.map((year) => ({
+            year: year.year,
+            revenueGrowth: year.revenueGrowth,
+            revenue: year.revenue,
+            operatingMargin: year.operatingMargin,
+            ebit: year.ebit,
+            taxRate: year.taxRate,
+            ebitAfterTax: year.ebitAfterTax,
+            reinvestment: year.capex - year.depreciation + year.changeInWc,
+            fcff: year.fcff,
+            costOfCapital: year.costOfCapital,
+            cumulatedWacc: year.cumulatedWacc,
+            presentValueFcff: year.pvFcff,
+            investedCapital: year.investedCapital,
+            salesToCapital: 0,
+            roic: year.roic,
+          })),
+          terminalYear: {
+            year: 11,
+            revenueGrowth: inputs.stableGrowthRate,
+            revenue: next.years[9]?.revenue ?? 0,
+            operatingMargin: inputs.stableOperatingMargin,
+            ebit: 0,
+            taxRate: inputs.marginalTaxRate,
+            ebitAfterTax: 0,
+            reinvestment: 0,
+            fcff: 0,
+            costOfCapital: next.years[9]?.costOfCapital ?? 0,
+            cumulatedWacc: next.years[9]?.cumulatedWacc ?? 1,
+            presentValueFcff: 0,
+            investedCapital: next.years[9]?.investedCapital ?? 0,
+            salesToCapital: 0,
+            roic: inputs.stableRoc,
+          },
+          terminalValue: next.terminalValue,
+          pvTerminalValue: next.pvTerminalValue,
+          pvCashFlows: next.pvCashFlows,
+          valueOfOperatingAssets: next.valueOfOperatingAssets,
+          adjustmentForDistress: 0,
+          valueOfEquity: next.valueOfEquity,
+          valuePerShare: next.valuePerShare,
+          diagnostics: {
+            revenueYear10: next.years[9]?.revenue ?? 0,
+            ebitYear10: next.years[9]?.ebit ?? 0,
+            roicYear10: next.years[9]?.roic ?? 0,
+            costOfCapitalYear10: next.years[9]?.costOfCapital ?? 0,
+            terminalGrowthRate: inputs.stableGrowthRate,
+          },
+        },
+        inputs: null,
+      },
+    }))
+  }
 
   return (
     <div className="calc-page"><div className="container">
@@ -115,7 +189,7 @@ export default function HighGrowthValuation() {
             <FormField label="Risk-free Rate" hint="อัตราดอกเบี้ยไม่มีความเสี่ยง" source="default" value={inputs.riskFreeRate} onChange={v => update('riskFreeRate', v)} step={0.01} />
             <FormField label="Market Risk Premium" hint="ค่าเบี้ยประกันความเสี่ยงตลาด" source="user" value={inputs.marketRiskPremium} onChange={v => update('marketRiskPremium', v)} step={0.01} />
           </div>
-          <button onClick={() => setResult(computeHighGrowthValuation(inputs))} className="btn-primary calc-btn">Calculate Valuation <span className="thai-sub">คำนวณมูลค่า</span></button>
+          <button onClick={computeAndSave} className="btn-primary calc-btn">Calculate Valuation <span className="thai-sub">คำนวณมูลค่า</span></button>
         </div>
         {result && (
           <div className="calc-results" ref={resultRef}>
