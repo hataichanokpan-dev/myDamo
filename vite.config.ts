@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import https from 'node:https'
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
 
@@ -12,50 +13,63 @@ function raw(obj: any, key: string): number {
   return 0
 }
 
-function extractQuoteSummary(html: string) {
-  const regex = /<script type="application\/json" data-sveltekit-fetched[^>]*data-url="([^"]*quoteSummary[^"]*)"[^>]*>([\s\S]*?)<\/script>/g
-  let match
-  while ((match = regex.exec(html)) !== null) {
-    try {
-      let d = JSON.parse(match[2])
-      if (d.body && typeof d.body === 'string') d = JSON.parse(d.body)
-      if (d?.quoteSummary?.result?.[0]) return d.quoteSummary.result[0]
-    } catch { /* try next */ }
-  }
-  return null
+function httpsGet(url: string, headers: Record<string, string> = {}): Promise<{ status: number; headers: any; body: string }> {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, { headers: { 'User-Agent': UA, ...headers }, maxHeaderSize: 65536 } as any, (res) => {
+      let body = ''
+      res.on('data', (d: Buffer) => (body += d))
+      res.on('end', () => resolve({ status: res.statusCode, headers: res.headers, body }))
+    })
+    req.on('error', reject)
+    req.setTimeout(15000, () => { req.destroy(); reject(new Error('timeout')) })
+  })
 }
 
-async function fetchPage(url: string): Promise<string> {
+let cachedCookies = ''
+let cachedCrumb = ''
+let cacheExpiry = 0
+
+async function getCrumbAuth(): Promise<{ cookies: string; crumb: string }> {
+  if (cachedCookies && cachedCrumb && Date.now() < cacheExpiry) {
+    return { cookies: cachedCookies, crumb: cachedCrumb }
+  }
+  const r1 = await httpsGet('https://finance.yahoo.com/', { Accept: 'text/html', 'Accept-Language': 'en-US,en;q=0.5' })
+  const cookies = (r1.headers['set-cookie'] || []).map((c: string) => c.split(';')[0]).join('; ')
+  if (!cookies) throw new Error('No cookies from Yahoo')
+  const r2 = await httpsGet('https://query1.finance.yahoo.com/v1/test/getcrumb', { Cookie: cookies })
+  if (r2.status !== 200) throw new Error('Crumb failed: ' + r2.status)
+  const crumb = r2.body
+  cachedCookies = cookies
+  cachedCrumb = crumb
+  cacheExpiry = Date.now() + 10 * 60 * 1000
+  return { cookies, crumb }
+}
+
+async function fetchQuoteSummary(ticker: string): Promise<any> {
   try {
-    const res = await fetch(url, {
-      headers: {
-        'User-Agent': UA,
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-      },
-      signal: AbortSignal.timeout(15000),
-    })
-    return res.ok ? await res.text() : ''
-  } catch { return '' }
+    const { cookies, crumb } = await getCrumbAuth()
+    const url = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${encodeURIComponent(ticker)}?modules=financialData,defaultKeyStatistics,summaryDetail,summaryProfile&crumb=${encodeURIComponent(crumb)}`
+    const r = await httpsGet(url, { Cookie: cookies })
+    if (r.status !== 200) return null
+    const data = JSON.parse(r.body)
+    return data?.quoteSummary?.result?.[0] || null
+  } catch {
+    return null
+  }
 }
 
 async function fetchStockData(ticker: string) {
-  const [chartData, html] = await Promise.all([
+  const [chartData, summaryData] = await Promise.all([
     fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`, {
       headers: { 'User-Agent': UA },
       signal: AbortSignal.timeout(10000),
     }).then(r => r.ok ? r.json() : null).catch(() => null),
-    fetchPage(`https://finance.yahoo.com/quote/${encodeURIComponent(ticker)}/`),
+    fetchQuoteSummary(ticker),
   ])
 
   let meta: any = {}
   if (chartData) {
     try { meta = chartData?.chart?.result?.[0]?.meta || {} } catch { /* */ }
-  }
-
-  let summaryData: any = null
-  if (html) {
-    try { summaryData = extractQuoteSummary(html) } catch { /* */ }
   }
 
   const fd = summaryData?.financialData || {}
@@ -80,12 +94,12 @@ async function fetchStockData(ticker: string) {
 
   return {
     symbol: meta.symbol || ticker,
-    shortName: meta.shortName || ticker,
-    longName: meta.longName || meta.shortName || ticker,
-    currency: meta.currency || 'USD',
+    shortName: meta.shortName || sp?.shortName || ticker,
+    longName: meta.longName || sp?.longName || meta.shortName || ticker,
+    currency: meta.currency || fd.financialCurrency || 'USD',
     exchange: meta.fullExchangeName || meta.exchangeName || '',
     price: meta.regularMarketPrice || raw(sd, 'regularMarketPrice') || 0,
-    previousClose: meta.chartPreviousClose || 0,
+    previousClose: meta.chartPreviousClose || raw(sd, 'previousClose') || 0,
     marketCap: raw(sd, 'marketCap') || raw(dk, 'enterpriseValue') || 0,
     sharesOutstanding,
     revenue: totalRevenue, totalRevenue,
